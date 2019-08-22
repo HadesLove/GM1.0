@@ -17,10 +17,10 @@ class AccountController extends Controller
         }
 
         $account->account_name = $data['name'];
-        $account->real_name = $data['real_name'];
-        $account->password = password_hash($data['password'], PASSWORD_DEFAULT);
-        $account->manager_id = $data['manager_id'];
-        $account->channel = empty($data['channel']) ? '' : $data['channel'];
+        $account->real_name    = $data['real_name'];
+        $account->password     = password_hash($data['password'], PASSWORD_DEFAULT);
+        $account->manager_id   = $data['manager_id'];
+        $account->channel      = empty($data['channel']) ? '' : json_encode($data['channel']);
 
         $result = $account->save();
 

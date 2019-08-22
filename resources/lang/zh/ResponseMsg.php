@@ -27,4 +27,6 @@ return [
     'CORRUPT_ACCESS_TOKEN'   => 'token不存在',
     'EXPIRED_ACCESS_TOKEN'   => 'token过期',
     'ROLE_HAS_EXISTED'       => '角色已存在',
+    'GIFT_HAS_EXISTED'       => '礼包配置已存在',
+    'GIFT_CODE_BATCH_HAS_EXISTED'   => '礼包码批次已存在',
 ];

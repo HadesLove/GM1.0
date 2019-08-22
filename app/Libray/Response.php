@@ -30,6 +30,8 @@ class Response
     const CORRUPT_ACCESS_TOKEN   = 80002;
     const EXPIRED_ACCESS_TOKEN   = 80003;
     const ROLE_HAS_EXISTED       = 90001;
+    const GIFT_HAS_EXISTED       = 90002;
+    const GIFT_CODE_BATCH_HAS_EXISTED       = 90003;
 
     static public function Success($Data = []){
         $Res = [

@@ -3,16 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Libray\Response;
+use App\Models\Account;
 use App\Models\Channel;
+use App\Models\CodeBox;
 use App\Models\Good;
 use App\Models\Manager;
 use App\Models\Server;
 
 class DedicineController extends Controller
 {
-    public function getChannelList(Channel $channel)
+    public function getChannelList(Channel $channel, Account $account)
     {
-        $list = $channel->select('id', 'channel_name')->get();
+        $channel_id = $account
+            ->where(['id' => UID])
+            ->select('channel')
+            ->first();
+
+        $list = $channel
+            ->whereIn('id', json_decode($channel_id->channel, true))
+            ->select('id', 'channel_name')
+            ->get();
 
         return response(Response::Success($list));
     }
@@ -34,6 +44,13 @@ class DedicineController extends Controller
     public function getGoodsList(Good $good)
     {
         $list = $good->select('id', 'good_name')->get();
+
+        return response(Response::Success($list));
+    }
+
+    public function getGiftDeployList(CodeBox $codeBox)
+    {
+        $list = $codeBox->select('id', 'box_name')->get();
 
         return response(Response::Success($list));
     }

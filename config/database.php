@@ -63,6 +63,20 @@ return [
             ]) : [],
         ],
 
+        'wxfyl' => [
+            'driver' => 'mysql',
+            'host' => '134.175.142.205',
+            'port' => '3306',
+            'database' => 'jh_s20002',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

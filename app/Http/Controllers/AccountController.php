@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Libray\Response;
 use App\Models\Account;
 use App\Models\Admin;
+use App\Models\Channel;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -31,14 +32,14 @@ class AccountController extends Controller
         return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
     }
 
-    public function accountList(Request $request, Account $account)
+    public function accountList(Request $request, Account $account, Channel $channel)
     {
         $account_name = $request->input('name');
         $manager_id   = $request->input('manager_id');
 
         $orm = $account->with(['manager' => function ($query){
             $query->select('id', 'manager_name');
-        }])->select('id', 'account_name', 'real_name', 'manager_id', 'created_at', 'status');
+        }])->select('id', 'account_name', 'real_name', 'manager_id', 'channel', 'created_at', 'status');
 
         if ($account_name){
             $orm->where(['account_name' => $account_name]);
@@ -48,7 +49,21 @@ class AccountController extends Controller
             $orm->where(['manager_id' => $manager_id]);
         }
 
-        $list = $orm->paginate(3);
+        $list = $orm->paginate(5);
+
+        $channelName = Channel::all()->keyBy('id')->toArray();
+
+        foreach ($list as &$value){
+            $channelVar = json_decode($value['channel'], true);
+            if ($channelVar){
+                $channelArray = array();
+                foreach ($channelVar as $key=>$val){
+                    $channelArray[$key]['id'] = $val;
+                    $channelArray[$key]['channel_name'] = $channelName[$val]['channel_name'];
+                }
+                $value['channel'] = $channelArray;
+            }
+        }
 
         return response(Response::Success($list));
     }
@@ -68,7 +83,7 @@ class AccountController extends Controller
         }
 
         if ($channel){
-            $orm->channel    = $channel;
+            $orm->channel    = json_encode($channel);
         }
 
         $orm->real_name  = $real_name;
@@ -92,7 +107,6 @@ class AccountController extends Controller
 
         return response(Response::Success());
     }
-
 
     public function accountInfo(Account $account)
     {

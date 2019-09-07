@@ -24,6 +24,7 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::get('server/getList', 'DedicineController@getServerList');
     Route::get('goods/getList', 'DedicineController@getGoodsList');
     Route::get('codebox/getList', 'DedicineController@getGiftDeployList');
+    Route::get('codebatch/getList', 'DedicineController@getCodeBatchList');
 
     Route::any('carte/list', 'CarteController@carteList');
 
@@ -35,6 +36,10 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 
 
     Route::post('send/mail', 'GMController@sendMail');
+    Route::any('send/mail/list', 'GMController@sendMailList');
+    Route::post('ban/chat', 'GMController@banChat');
+    Route::post('ban/login', 'GMController@banLogin');
+
     Route::any('login/notice/list', 'GMController@loginNoticeList');
     Route::post('login/notice', 'GMController@loginNoticeStore');
     Route::any('get/login/notice', 'GMController@getLoginNotice');
@@ -45,5 +50,12 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 
 
     Route::post('gift/code/batch', 'GMController@giftCodeBatchStore');
+    Route::any('code/batch/list', 'GMController@giftCodeBatchList');
+    Route::post('code/batch/{id}', 'GMController@giftCodeBatchUpdate');
+
+    Route::post('gift/code', 'GMController@giftCodeStore');
+    Route::any('code/list', 'GMController@giftCodeList');
+
+    Route::any('role/list', 'DataController@roleList');
 
 });

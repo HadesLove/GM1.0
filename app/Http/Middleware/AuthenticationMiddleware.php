@@ -19,6 +19,10 @@ class AuthenticationMiddleware
             return response(Response::Error(trans('ResponseMsg.CORRUPT_ACCESS_TOKEN'), 80002));
         }
 
+        if (strlen($token) <= 7){
+            return response(Response::Error(trans('ResponseMsg.AUTH_BAD_ACCESS_TOKEN'), 80001));
+        }
+
         $Encryption = new Encryption();
         $TokenData = $Encryption->decode($token);
         $TokenData = json_decode($TokenData,true);

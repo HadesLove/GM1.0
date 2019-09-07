@@ -28,7 +28,7 @@ class LoginController extends Controller
             return response(Response::Error(trans('ResponseMsg.USER_ACCOUNT_FORBIDDEN'), 20003));
         }
 
-        if (password_verify($user->password, $password)){
+        if (!password_verify($password, $user->password)){
             return response(Response::Error(trans('ResponseMsg.USER_LOGIN_ERROR'), 20002));
         }
 

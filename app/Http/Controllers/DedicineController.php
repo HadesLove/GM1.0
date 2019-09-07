@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Libray\Response;
 use App\Models\Account;
 use App\Models\Channel;
+use App\Models\CodeBatch;
 use App\Models\CodeBox;
 use App\Models\Good;
 use App\Models\Manager;
@@ -51,6 +52,13 @@ class DedicineController extends Controller
     public function getGiftDeployList(CodeBox $codeBox)
     {
         $list = $codeBox->select('id', 'box_name')->get();
+
+        return response(Response::Success($list));
+    }
+
+    public function getCodeBatchList(CodeBatch $codeBatch)
+    {
+        $list = $codeBatch->select('id', 'batch_name')->get();
 
         return response(Response::Success($list));
     }

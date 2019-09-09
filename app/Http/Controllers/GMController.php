@@ -10,6 +10,7 @@ use App\Models\CodeBox;
 use App\Models\Content;
 use App\Models\Gmmail;
 use App\Models\Good;
+use App\Models\NewRole;
 use Illuminate\Http\Request;
 use DB;
 
@@ -112,6 +113,154 @@ class GMController extends Controller
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
+    }
+
+    protected function sendMailAll($server, $item, $title, $role_list, $content, $channel)
+    {
+        $serverId = intval($server);
+
+        if (empty($role_list)) {
+            $role = array();
+        } else {
+            $role = explode("|", $role_list);
+        }
+
+        $roleInt = array();
+        foreach ($role as $role_val){
+            array_push($roleInt, intval($role_val));
+        }
+
+        $str_long_title = strlen($title);
+        $titles = '';
+        for ($i=0; $i < $str_long_title ; $i++) {
+            if(preg_match('/^[\x7f-\xff]+$/', $title[$i])){
+                $titles .= urlencode($title[$i]);
+            }else{
+                $titles .= $title[$i];
+            }
+        }
+
+        $str_long_content = strlen($content);
+        $contents = '';
+        for ($i=0; $i < $str_long_content ; $i++) {
+            if(preg_match('/^[\x7f-\xff]+$/', $content[$i])){
+                $contents .= urlencode($content[$i]);
+            }else{
+                $contents .= $content[$i];
+            }
+        }
+
+        $url_args = array(
+            "objects"     => $channel ? intval($channel) : $roleInt,
+            "title"       => strtolower($title),
+            "content"     => strtolower($contents),
+            "items"       => $item,
+        );
+
+        $time = time();
+        $sign_args = json_encode($url_args);
+        $sign = md5("args={$sign_args}&fun=web_op_sys_mail&mod=mail_api&sid={$serverId}&time={$time}&key={$this->key}");
+
+        //组装内容
+        $info = array(
+            'args'      => $sign_args,
+            'fun'       => 'web_op_sys_mail',
+            'mod'       => 'mail_api',
+            'sid'       => $serverId,
+            'time'      => $time,
+            'sign'      => $sign,
+        );
+
+        //发送内容
+        $res = $this->send_post(env('WXURL'), $info);
+
+        return $res;
+    }
+
+    public function newRolesGiftList(NewRole $newRole)
+    {
+        $orm = $newRole->with([
+                    'account' => function($query) {
+                        $query->select('id', 'real_name');
+                    }
+                ]);
+
+        $list = $orm->paginate(20);
+
+        $goods = Good::all()->keyBy('id')->toArray();
+
+        foreach ($list as $key => $value){
+            $attach = json_decode($value["attach_s"], true);
+            $goodsInfo    = array();
+            if ($attach) {
+                foreach ($attach as $k=>$val) {
+                    if (isset($goods[$k])) {
+                        $goodsInfo[] = $goods[$k]["good_name"] . "x" . $val;
+                    }
+
+                }
+            }
+            $value['attach'] = $goodsInfo ? implode(";", $goodsInfo) : "（无）";
+        }
+
+        return response(Response::Success($list));
+    }
+
+    public function newRolesGiftStore(Request $request)
+    {
+        $content = $request->input('content');
+        $title   = $request->input('title');
+        $item_id = $request->input('item_id');
+
+        $item = array();
+        foreach ($item_id as $item_key => $item_value){
+            $item_val = json_decode($item_value, true);
+            if (!empty($item_val)){
+                $item[$item_val['selectVal']] = intval($item_val['num']);
+            }
+        }
+
+        $res = NewRole::create([
+            'account_id' => UID,
+            'title'      => $title,
+            'content'    => $content,
+            'status'     => 1,
+            'attach_s'   => json_encode($item),
+        ]);
+
+        if ($res) {
+            return response(Response::Success());
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+    }
+
+    public function newRolesGiftUpdate(Request $request, NewRole $newRole)
+    {
+        $data = $request->all();
+
+        $res = $newRole->where(['id' => $data['id']])
+            ->update(['status' => $data['status']]);
+
+        if ($res) {
+            return response(Response::Success());
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+    }
+
+    public function newRolesGift(Request $request, NewRole $newRole)
+    {
+        $serverId = $request->input('sid');
+        $roleId   = $request->input('uid');
+
+        $result = $newRole->where(['status' => '1'])->first();
+
+        dump($result);
+
+        $res = $this->sendMailAll($serverId, $result->attach_s, $result->title, $roleId, $result->content, '');
+
+        dump($res);
     }
 
     public function sendMailList(Gmmail $gmmail, Request $request)

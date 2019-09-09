@@ -13,6 +13,8 @@
 */
 Route::any('login', 'LoginController@index');
 
+Route::any('new/role/gift', 'GMController@newRolesGift');
+
 Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 
     Route::post('manager/add', 'ManagerController@store');
@@ -37,6 +39,11 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 
     Route::post('send/mail', 'GMController@sendMail');
     Route::any('send/mail/list', 'GMController@sendMailList');
+
+    Route::post('roles/gift/store', 'GMController@newRolesGiftStore');
+    Route::any('roles/gift/list', 'GMController@newRolesGiftList');
+    Route::patch('roles/gift/{id}', 'GMController@newRolesGiftUpdate');
+
     Route::post('ban/chat', 'GMController@banChat');
     Route::post('ban/login', 'GMController@banLogin');
 

@@ -17,6 +17,7 @@ use DB;
 class GMController extends Controller
 {
     private $key = 'rJYgMdja4KXMqwFbAibOM7jhls';
+    private $new_key = '51Game@123.com&%#';
 
     public function sendMail(Request $request)
     {
@@ -253,14 +254,17 @@ class GMController extends Controller
     {
         $serverId = $request->input('sid');
         $roleId   = $request->input('uid');
+        $sign     = $request->input('sign');
 
-        $result = $newRole->where(['status' => '1'])->first();
+        if ($sign == md5($roleId.$serverId.$this->new_key)) {
 
-        dump($result);
+            $result = $newRole->where(['status' => '1'])->first();
 
-        $res = $this->sendMailAll($serverId, $result->attach_s, $result->title, $roleId, $result->content, '');
+            if ($result) {
+                $this->sendMailAll($serverId, $result->attach_s, $result->title, $roleId, $result->content, '');
+            }
+        }
 
-        dump($res);
     }
 
     public function sendMailList(Gmmail $gmmail, Request $request)

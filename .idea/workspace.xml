@@ -3,11 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0023bc85-797d-4532-ae41-990254aa7c67" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/CarteController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/CarteController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/DedicineController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/DedicineController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/GMController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/GMController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Models/Carte.php" afterPath="$PROJECT_DIR$/app/Models/Carte.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/api.php" afterPath="$PROJECT_DIR$/routes/api.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -85,18 +81,18 @@
       <file leaf-file-name="DedicineController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DedicineController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="477">
-              <caret line="83" column="50" lean-forward="true" selection-start-line="83" selection-start-column="50" selection-end-line="83" selection-end-column="50" />
+            <state relative-caret-position="213">
+              <caret line="78" column="87" lean-forward="true" selection-start-line="78" selection-start-column="87" selection-end-line="78" selection-end-column="87" />
               <folding>
                 <element signature="e#304#714#0#PHP" expanded="false" />
-                <marker date="1568189170059" expanded="true" signature="2044:2050" ph=" " />
-                <marker date="1568189170059" expanded="true" signature="2050:2056" ph=" " />
-                <marker date="1568189170059" expanded="true" signature="2056:2062" ph=" " />
-                <marker date="1568189170059" expanded="true" signature="2169:2175" ph=" " />
-                <marker date="1568189170059" expanded="true" signature="2175:2181" ph=" " />
-                <marker date="1568189170059" expanded="true" signature="2181:2187" ph=" " />
-                <marker date="1568189170059" expanded="true" signature="2187:2193" ph=" " />
-                <marker date="1568189170059" expanded="true" signature="2193:2199" ph=" " />
+                <marker date="1568189401255" expanded="true" signature="2044:2050" ph=" " />
+                <marker date="1568189401255" expanded="true" signature="2050:2056" ph=" " />
+                <marker date="1568189401255" expanded="true" signature="2056:2062" ph=" " />
+                <marker date="1568189401255" expanded="true" signature="2168:2174" ph=" " />
+                <marker date="1568189401255" expanded="true" signature="2174:2180" ph=" " />
+                <marker date="1568189401255" expanded="true" signature="2180:2186" ph=" " />
+                <marker date="1568189401255" expanded="true" signature="2186:2192" ph=" " />
+                <marker date="1568189401255" expanded="true" signature="2192:2198" ph=" " />
               </folding>
             </state>
           </provider>
@@ -492,12 +488,12 @@
       <workItem from="1567395831079" duration="2421000" />
       <workItem from="1567497546744" duration="29617000" />
       <workItem from="1567846758872" duration="1834000" />
-      <workItem from="1567993080313" duration="22066000" />
+      <workItem from="1567993080313" duration="22237000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="148818000" />
+    <option name="totallyTimeSpent" value="148989000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1" y="23" width="1440" height="819" extended-state="0" />
@@ -1035,18 +1031,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DedicineController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="477">
-          <caret line="83" column="50" lean-forward="true" selection-start-line="83" selection-start-column="50" selection-end-line="83" selection-end-column="50" />
+        <state relative-caret-position="213">
+          <caret line="78" column="87" lean-forward="true" selection-start-line="78" selection-start-column="87" selection-end-line="78" selection-end-column="87" />
           <folding>
             <element signature="e#304#714#0#PHP" expanded="false" />
-            <marker date="1568189170059" expanded="true" signature="2044:2050" ph=" " />
-            <marker date="1568189170059" expanded="true" signature="2050:2056" ph=" " />
-            <marker date="1568189170059" expanded="true" signature="2056:2062" ph=" " />
-            <marker date="1568189170059" expanded="true" signature="2169:2175" ph=" " />
-            <marker date="1568189170059" expanded="true" signature="2175:2181" ph=" " />
-            <marker date="1568189170059" expanded="true" signature="2181:2187" ph=" " />
-            <marker date="1568189170059" expanded="true" signature="2187:2193" ph=" " />
-            <marker date="1568189170059" expanded="true" signature="2193:2199" ph=" " />
+            <marker date="1568189401255" expanded="true" signature="2044:2050" ph=" " />
+            <marker date="1568189401255" expanded="true" signature="2050:2056" ph=" " />
+            <marker date="1568189401255" expanded="true" signature="2056:2062" ph=" " />
+            <marker date="1568189401255" expanded="true" signature="2168:2174" ph=" " />
+            <marker date="1568189401255" expanded="true" signature="2174:2180" ph=" " />
+            <marker date="1568189401255" expanded="true" signature="2180:2186" ph=" " />
+            <marker date="1568189401255" expanded="true" signature="2186:2192" ph=" " />
+            <marker date="1568189401255" expanded="true" signature="2192:2198" ph=" " />
           </folding>
         </state>
       </provider>

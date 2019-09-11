@@ -85,10 +85,18 @@
       <file leaf-file-name="DedicineController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DedicineController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="411">
-              <caret line="79" column="22" lean-forward="true" selection-start-line="79" selection-start-column="22" selection-end-line="79" selection-end-column="22" />
+            <state relative-caret-position="477">
+              <caret line="83" column="50" lean-forward="true" selection-start-line="83" selection-start-column="50" selection-end-line="83" selection-end-column="50" />
               <folding>
                 <element signature="e#304#714#0#PHP" expanded="false" />
+                <marker date="1568189170059" expanded="true" signature="2044:2050" ph=" " />
+                <marker date="1568189170059" expanded="true" signature="2050:2056" ph=" " />
+                <marker date="1568189170059" expanded="true" signature="2056:2062" ph=" " />
+                <marker date="1568189170059" expanded="true" signature="2169:2175" ph=" " />
+                <marker date="1568189170059" expanded="true" signature="2175:2181" ph=" " />
+                <marker date="1568189170059" expanded="true" signature="2181:2187" ph=" " />
+                <marker date="1568189170059" expanded="true" signature="2187:2193" ph=" " />
+                <marker date="1568189170059" expanded="true" signature="2193:2199" ph=" " />
               </folding>
             </state>
           </provider>
@@ -484,16 +492,15 @@
       <workItem from="1567395831079" duration="2421000" />
       <workItem from="1567497546744" duration="29617000" />
       <workItem from="1567846758872" duration="1834000" />
-      <workItem from="1567993080313" duration="21889000" />
+      <workItem from="1567993080313" duration="22066000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="148641000" />
+    <option name="totallyTimeSpent" value="148818000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1" y="23" width="1440" height="819" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22857143" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -503,7 +510,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35036495" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35036495" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1028,10 +1035,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DedicineController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="411">
-          <caret line="79" column="22" lean-forward="true" selection-start-line="79" selection-start-column="22" selection-end-line="79" selection-end-column="22" />
+        <state relative-caret-position="477">
+          <caret line="83" column="50" lean-forward="true" selection-start-line="83" selection-start-column="50" selection-end-line="83" selection-end-column="50" />
           <folding>
             <element signature="e#304#714#0#PHP" expanded="false" />
+            <marker date="1568189170059" expanded="true" signature="2044:2050" ph=" " />
+            <marker date="1568189170059" expanded="true" signature="2050:2056" ph=" " />
+            <marker date="1568189170059" expanded="true" signature="2056:2062" ph=" " />
+            <marker date="1568189170059" expanded="true" signature="2169:2175" ph=" " />
+            <marker date="1568189170059" expanded="true" signature="2175:2181" ph=" " />
+            <marker date="1568189170059" expanded="true" signature="2181:2187" ph=" " />
+            <marker date="1568189170059" expanded="true" signature="2187:2193" ph=" " />
+            <marker date="1568189170059" expanded="true" signature="2193:2199" ph=" " />
           </folding>
         </state>
       </provider>

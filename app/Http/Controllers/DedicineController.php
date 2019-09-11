@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Libray\Response;
 use App\Models\Account;
+use App\Models\Carte;
 use App\Models\Channel;
 use App\Models\CodeBatch;
 use App\Models\CodeBox;
@@ -59,6 +60,35 @@ class DedicineController extends Controller
     public function getCodeBatchList(CodeBatch $codeBatch)
     {
         $list = $codeBatch->select('id', 'batch_name')->get();
+
+        return response(Response::Success($list));
+    }
+
+    public function getCarteList(Carte $carte)
+    {
+        $list = $carte->select('id', 'carte_name', 'pid')->get();
+
+        foreach ($list as $value){
+            if ($value['pid'] == 0){
+                $value['carte_name'] = '—'.$value['carte_name'];
+            }else{
+                $res = $carte->where(['id' => $value['pid']])->first();
+                if ($res['pid'] == 0){
+                    $value['carte_name'] = '<span>&nbsp;&nbsp;&nbsp;</span>>|—'.$value['carte_name'];
+                }else{
+                    $value['carte_name'] = '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>>└─ '.$value['carte_name'];
+                }
+            }
+        }
+
+        return response(Response::Success($list));
+    }
+
+    public function getMenuList(Carte $carte)
+    {
+        $arr = array();
+
+        $list = $carte::GetAllMenuTree(0, $arr);
 
         return response(Response::Success($list));
     }

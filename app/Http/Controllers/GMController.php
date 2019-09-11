@@ -17,6 +17,7 @@ use DB;
 class GMController extends Controller
 {
     private $key = 'rJYgMdja4KXMqwFbAibOM7jhls';
+
     private $new_key = '51Game@123.com&%#';
 
     public function sendMail(Request $request)
@@ -27,6 +28,7 @@ class GMController extends Controller
         $item_id   = $request->input('item_id');
         $content   = $request->input('content');
         $channel   = $request->input('channel', null);
+        $level     = $request->input('level', null);
 
         $serverId = intval($server);
 
@@ -38,15 +40,36 @@ class GMController extends Controller
             }
         }
 
-        if (empty($role_list)) {
-            $role = array();
-        } else {
-            $role = explode("|", $role_list);
-        }
 
-        $roleInt = array();
-        foreach ($role as $role_val){
-            array_push($roleInt, intval($role_val));
+        if (!empty($level[0]) && !empty($level[1])){
+            if ($level[0] == $level[1]){
+                $orm = DB::connection('wxfyl')
+                    ->table('user')
+                    ->where(['renown_lv' => $level[0]])
+                    ->select('uid', 'renown_lv')
+                    ->get();
+            }else{
+                $orm = DB::connection('wxfyl')
+                    ->table('user')
+                    ->whereBetween('renown_lv', [$level[0], $level[1]])
+                    ->select('uid', 'renown_lv')
+                    ->get();
+            }
+            $roleInt = array();
+            foreach ($orm as $orm_val){
+                array_push($roleInt, intval($orm_val->uid));
+            }
+        }else{
+            if (empty($role_list)) {
+                $role = array();
+            } else {
+                $role = explode("|", $role_list);
+            }
+
+            $roleInt = array();
+            foreach ($role as $role_val){
+                array_push($roleInt, intval($role_val));
+            }
         }
 
         $str_long_title = strlen($title);
@@ -93,7 +116,7 @@ class GMController extends Controller
         //发送内容
         $res = $this->send_post(env('WXURL'), $info);
 
-        $gmmail = Gmmail::create([
+        $result = Gmmail::create([
             'role_list'  => $role_list,
             'server_id'  => $serverId,
             'channel_id' => $channel,
@@ -106,7 +129,7 @@ class GMController extends Controller
         $res = json_decode($res, true);
 
         if ($res['res'] == "1") {
-            if ($gmmail){
+            if ($result){
                 return response(Response::Success());
             }
             return response(Response::Error(trans('ResponseMsg.SPECIFIED_QUESTIONED_USER_NOT_EXIST'), 30001));
@@ -114,68 +137,6 @@ class GMController extends Controller
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
-    }
-
-    protected function sendMailAll($server, $item, $title, $role_list, $content, $channel)
-    {
-        $serverId = intval($server);
-
-        if (empty($role_list)) {
-            $role = array();
-        } else {
-            $role = explode("|", $role_list);
-        }
-
-        $roleInt = array();
-        foreach ($role as $role_val){
-            array_push($roleInt, intval($role_val));
-        }
-
-        $str_long_title = strlen($title);
-        $titles = '';
-        for ($i=0; $i < $str_long_title ; $i++) {
-            if(preg_match('/^[\x7f-\xff]+$/', $title[$i])){
-                $titles .= urlencode($title[$i]);
-            }else{
-                $titles .= $title[$i];
-            }
-        }
-
-        $str_long_content = strlen($content);
-        $contents = '';
-        for ($i=0; $i < $str_long_content ; $i++) {
-            if(preg_match('/^[\x7f-\xff]+$/', $content[$i])){
-                $contents .= urlencode($content[$i]);
-            }else{
-                $contents .= $content[$i];
-            }
-        }
-
-        $url_args = array(
-            "objects"     => $channel ? intval($channel) : $roleInt,
-            "title"       => strtolower($title),
-            "content"     => strtolower($contents),
-            "items"       => $item,
-        );
-
-        $time = time();
-        $sign_args = json_encode($url_args);
-        $sign = md5("args={$sign_args}&fun=web_op_sys_mail&mod=mail_api&sid={$serverId}&time={$time}&key={$this->key}");
-
-        //组装内容
-        $info = array(
-            'args'      => $sign_args,
-            'fun'       => 'web_op_sys_mail',
-            'mod'       => 'mail_api',
-            'sid'       => $serverId,
-            'time'      => $time,
-            'sign'      => $sign,
-        );
-
-        //发送内容
-        $res = $this->send_post(env('WXURL'), $info);
-
-        return $res;
     }
 
     public function newRolesGiftList(NewRole $newRole)
@@ -258,7 +219,7 @@ class GMController extends Controller
 
         if ($sign == md5($roleId.$serverId.$this->new_key)) {
 
-            $result = $newRole->where(['status' => '1'])->first();
+            $result = $newRole->where(['status' => 1])->first();
 
             if ($result) {
                 $this->sendMailAll($serverId, $result->attach_s, $result->title, $roleId, $result->content, '');
@@ -447,30 +408,6 @@ class GMController extends Controller
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
-    }
-
-    protected function addBan($ban)
-    {
-        $result = Ban::create($ban);
-
-        return $result;
-    }
-
-    protected function send_post($url, $params) {
-
-        $post_data = http_build_query($params);
-        $options = array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => 'Content-type:application/x-www-form-urlencoded',
-                'content' => $post_data,
-                'timeout' => 15 * 60 // 超时时间（单位:s）
-            )
-        );
-        $context = stream_context_create($options);
-        $result = file_get_contents($url, false, $context);
-
-        return $result;
     }
 
     public function loginNoticeStore(Request $request, Content $content)
@@ -831,5 +768,91 @@ class GMController extends Controller
             $code .= $pattern[mt_rand(0,1377)];
         }
         return $code;
+    }
+
+    protected function sendMailAll($server, $item, $title, $role_list, $content, $channel)
+    {
+        $serverId = intval($server);
+
+        if (empty($role_list)) {
+            $role = array();
+        } else {
+            $role = explode("|", $role_list);
+        }
+
+        $roleInt = array();
+        foreach ($role as $role_val){
+            array_push($roleInt, intval($role_val));
+        }
+
+        $str_long_title = strlen($title);
+        $titles = '';
+        for ($i=0; $i < $str_long_title ; $i++) {
+            if(preg_match('/^[\x7f-\xff]+$/', $title[$i])){
+                $titles .= urlencode($title[$i]);
+            }else{
+                $titles .= $title[$i];
+            }
+        }
+
+        $str_long_content = strlen($content);
+        $contents = '';
+        for ($i=0; $i < $str_long_content ; $i++) {
+            if(preg_match('/^[\x7f-\xff]+$/', $content[$i])){
+                $contents .= urlencode($content[$i]);
+            }else{
+                $contents .= $content[$i];
+            }
+        }
+
+        $url_args = array(
+            "objects"     => $channel ? intval($channel) : $roleInt,
+            "title"       => strtolower($title),
+            "content"     => strtolower($contents),
+            "items"       => $item,
+        );
+
+        $time = time();
+        $sign_args = json_encode($url_args);
+        $sign = md5("args={$sign_args}&fun=web_op_sys_mail&mod=mail_api&sid={$serverId}&time={$time}&key={$this->key}");
+
+        //组装内容
+        $info = array(
+            'args'      => $sign_args,
+            'fun'       => 'web_op_sys_mail',
+            'mod'       => 'mail_api',
+            'sid'       => $serverId,
+            'time'      => $time,
+            'sign'      => $sign,
+        );
+
+        //发送内容
+        $res = $this->send_post(env('WXURL'), $info);
+
+        return $res;
+    }
+
+    protected function addBan($ban)
+    {
+        $result = Ban::create($ban);
+
+        return $result;
+    }
+
+    protected function send_post($url, $params) {
+
+        $post_data = http_build_query($params);
+        $options = array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => 'Content-type:application/x-www-form-urlencoded',
+                'content' => $post_data,
+                'timeout' => 15 * 60 // 超时时间（单位:s）
+            )
+        );
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+
+        return $result;
     }
 }

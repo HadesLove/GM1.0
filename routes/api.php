@@ -27,8 +27,11 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::get('goods/getList', 'DedicineController@getGoodsList');
     Route::get('codebox/getList', 'DedicineController@getGiftDeployList');
     Route::get('codebatch/getList', 'DedicineController@getCodeBatchList');
+    Route::get('carte/getList', 'DedicineController@getCarteList');
+    Route::get('menu/getList', 'DedicineController@getMenuList');
 
     Route::any('carte/list', 'CarteController@carteList');
+    Route::post('carte/add', 'CarteController@store');
 
     Route::post('account/add', 'AccountController@store');
     Route::any('account/list', 'AccountController@accountList');

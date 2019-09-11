@@ -25,13 +25,6 @@ class Carte extends Model
             ->with(['children'])
             ->get()->toArray();
 
-        foreach ($arr as $value){
-            if (!empty($value['children'])){
-
-            }
-
-        }
-
         return $arr;
     }
 }

@@ -81,18 +81,10 @@
       <file leaf-file-name="DedicineController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DedicineController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="213">
-              <caret line="78" column="87" lean-forward="true" selection-start-line="78" selection-start-column="87" selection-end-line="78" selection-end-column="87" />
+            <state relative-caret-position="251">
+              <caret line="80" column="13" lean-forward="true" selection-start-line="80" selection-start-column="13" selection-end-line="80" selection-end-column="13" />
               <folding>
                 <element signature="e#304#714#0#PHP" expanded="false" />
-                <marker date="1568189401255" expanded="true" signature="2044:2050" ph=" " />
-                <marker date="1568189401255" expanded="true" signature="2050:2056" ph=" " />
-                <marker date="1568189401255" expanded="true" signature="2056:2062" ph=" " />
-                <marker date="1568189401255" expanded="true" signature="2168:2174" ph=" " />
-                <marker date="1568189401255" expanded="true" signature="2174:2180" ph=" " />
-                <marker date="1568189401255" expanded="true" signature="2180:2186" ph=" " />
-                <marker date="1568189401255" expanded="true" signature="2186:2192" ph=" " />
-                <marker date="1568189401255" expanded="true" signature="2192:2198" ph=" " />
               </folding>
             </state>
           </provider>
@@ -488,12 +480,12 @@
       <workItem from="1567395831079" duration="2421000" />
       <workItem from="1567497546744" duration="29617000" />
       <workItem from="1567846758872" duration="1834000" />
-      <workItem from="1567993080313" duration="22237000" />
+      <workItem from="1567993080313" duration="22292000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="148989000" />
+    <option name="totallyTimeSpent" value="149044000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1" y="23" width="1440" height="819" extended-state="0" />
@@ -1031,18 +1023,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DedicineController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="78" column="87" lean-forward="true" selection-start-line="78" selection-start-column="87" selection-end-line="78" selection-end-column="87" />
+        <state relative-caret-position="251">
+          <caret line="80" column="13" lean-forward="true" selection-start-line="80" selection-start-column="13" selection-end-line="80" selection-end-column="13" />
           <folding>
             <element signature="e#304#714#0#PHP" expanded="false" />
-            <marker date="1568189401255" expanded="true" signature="2044:2050" ph=" " />
-            <marker date="1568189401255" expanded="true" signature="2050:2056" ph=" " />
-            <marker date="1568189401255" expanded="true" signature="2056:2062" ph=" " />
-            <marker date="1568189401255" expanded="true" signature="2168:2174" ph=" " />
-            <marker date="1568189401255" expanded="true" signature="2174:2180" ph=" " />
-            <marker date="1568189401255" expanded="true" signature="2180:2186" ph=" " />
-            <marker date="1568189401255" expanded="true" signature="2186:2192" ph=" " />
-            <marker date="1568189401255" expanded="true" signature="2192:2198" ph=" " />
           </folding>
         </state>
       </provider>

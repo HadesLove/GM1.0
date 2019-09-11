@@ -74,9 +74,9 @@ class DedicineController extends Controller
             }else{
                 $res = $carte->where(['id' => $value['pid']])->first();
                 if ($res['pid'] == 0){
-                    $value['carte_name'] = '     |—'.$value['carte_name'];
+                    $value['carte_name'] = '         |—'.$value['carte_name'];
                 }else{
-                    $value['carte_name'] = '         └─ '.$value['carte_name'];
+                    $value['carte_name'] = '                    └─ '.$value['carte_name'];
                 }
             }
         }

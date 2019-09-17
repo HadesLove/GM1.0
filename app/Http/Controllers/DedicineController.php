@@ -21,10 +21,21 @@ class DedicineController extends Controller
             ->select('channel')
             ->first();
 
-        $list = $channel
-            ->whereIn('id', json_decode($channel_id->channel, true))
-            ->select('id', 'channel_name')
-            ->get();
+        $channel_arr = json_decode($channel_id->channel, true);
+
+        if ($channel_arr) {
+
+            $id = array();
+            foreach ($channel_arr as $key => $val) {
+                $id[] = json_decode($val, true)['id'];
+            }
+            $list = $channel
+                ->whereIn('id', $id)
+                ->select('id', 'channel_name')
+                ->get();
+        }else{
+            $list = [];
+        }
 
         return response(Response::Success($list));
     }

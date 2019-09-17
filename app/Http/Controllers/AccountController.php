@@ -32,7 +32,7 @@ class AccountController extends Controller
         return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
     }
 
-    public function accountList(Request $request, Account $account, Channel $channel)
+    public function accountList(Request $request, Account $account)
     {
         $account_name = $request->input('name');
         $manager_id   = $request->input('manager_id');
@@ -48,18 +48,17 @@ class AccountController extends Controller
         if ($manager_id){
             $orm->where(['manager_id' => $manager_id]);
         }
-
         $list = $orm->paginate(5);
-
-        $channelName = Channel::all()->keyBy('id')->toArray();
 
         foreach ($list as &$value){
             $channelVar = json_decode($value['channel'], true);
+
             if ($channelVar){
                 $channelArray = array();
                 foreach ($channelVar as $key=>$val){
-                    $channelArray[$key]['id'] = $val;
-                    $channelArray[$key]['channel_name'] = $channelName[$val]['channel_name'];
+                    $channel_data = json_decode($val, true);
+                    $channelArray[$key]['id'] = $channel_data['id'];
+                    $channelArray[$key]['channel_name'] = $channel_data['channel_name'];
                 }
                 $value['channel'] = $channelArray;
             }
@@ -108,15 +107,21 @@ class AccountController extends Controller
         return response(Response::Success());
     }
 
+    public function change(Request $request, Account $account)
+    {
+        $data = $request->all();
+
+        if (!$account->where(['id' => $data['id']])->update(['status' => $data['status']])){
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+
+        return response(Response::Success());
+    }
+
     public function accountInfo(Account $account)
     {
         $info = $account->where(['id' => UID])->first();
 
         return response(Response::Success($info));
-    }
-
-    public function roleMenu()
-    {
-
     }
 }

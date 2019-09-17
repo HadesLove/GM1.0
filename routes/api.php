@@ -20,6 +20,7 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::post('manager/add', 'ManagerController@store');
     Route::patch('manager/{id}', 'ManagerController@update');
     Route::any('manager/list', 'ManagerController@managerList');
+    Route::post('manager/{id}', 'ManagerController@save');
 
     Route::get('manager/getList', 'DedicineController@getManagerList');
     Route::get('channel/getList', 'DedicineController@getChannelList');

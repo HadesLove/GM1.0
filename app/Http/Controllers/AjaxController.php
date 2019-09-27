@@ -17,16 +17,16 @@ class AjaxController extends Controller
         $sign = $request->input('sign');
 
         if($sign !== md5($ip.$sid.$this->key)){
-            return response(Response::Error(trans('ResponseMsg.SIGN_ERROR'), 90004));
+            return response(Response::Success());
         }
 
         $reslut = $white_ip->where(['ip' => $ip, 'server_id' => $sid])->first();
 
         if($reslut){
-            return response(Response::Success());
+            return response(Response::Error(trans('ResponseMsg.WHITE_IP_NOT_FOUND'), 90005));
         }
 
-        return response(Response::Error(trans('ResponseMsg.WHITE_IP_NOT_FOUND'), 90005));
+        return response(Response::Success());
     }
 
     public function giftUseCheck(Request $request)

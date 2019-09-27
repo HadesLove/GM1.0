@@ -512,7 +512,6 @@ class GMController extends Controller
             if ($code->id != $id){
                 return response(Response::Error(trans('ResponseMsg.GIFT_HAS_EXISTED'), 90002));
             }
-
         }
 
         $item = array();

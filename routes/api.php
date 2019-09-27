@@ -14,6 +14,7 @@
 Route::any('login', 'LoginController@index');
 
 Route::any('new/role/gift', 'GMController@newRolesGift');
+Route::post('white/ip/check', 'AjaxController@whiteIpCheck');
 
 Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 
@@ -40,7 +41,6 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::post('account/{id}', 'AccountController@save');
     Route::get('info', 'AccountController@accountInfo');
 
-
     Route::post('send/mail', 'GMController@sendMail');
     Route::any('send/mail/list', 'GMController@sendMailList');
 
@@ -60,13 +60,21 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::post('gift/deploy/{id}', 'GMController@giftDeployUpdate');
 
 
-    Route::post('gift/code/batch', 'GMController@giftCodeBatchStore');
-    Route::any('code/batch/list', 'GMController@giftCodeBatchList');
-    Route::post('code/batch/{id}', 'GMController@giftCodeBatchUpdate');
+    Route::post('gift/code/batch', 'GMController@codeBatchStore');
+    Route::any('code/batch/list', 'GMController@codeBatchList');
+    Route::post('code/batch/{id}', 'GMController@codeBatchUpdate');
 
     Route::post('gift/code', 'GMController@giftCodeStore');
     Route::any('code/list', 'GMController@giftCodeList');
 
+    Route::post('white/ip', 'GMController@whiteIpStore');
+    Route::any('white/ip/list', 'GMController@whiteIpList');
+
     Route::any('role/list', 'DataController@roleList');
+
+    Route::post('recharge', 'GameController@recharge');
+
+    Route::any('server/list', 'ServerController@index');
+    Route::post('server/{id}', 'ServerController@save');
 
 });

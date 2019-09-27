@@ -11,14 +11,14 @@ use App\Models\Content;
 use App\Models\Gmmail;
 use App\Models\Good;
 use App\Models\NewRole;
+use App\Models\WhiteIp;
 use Illuminate\Http\Request;
 use DB;
+use Monolog\Handler\IFTTTHandler;
 
 class GMController extends Controller
 {
     private $key = 'rJYgMdja4KXMqwFbAibOM7jhls';
-
-    private $new_key = '51Game@123.com&%#';
 
     public function sendMail(Request $request)
     {
@@ -182,7 +182,7 @@ class GMController extends Controller
             }
         }
 
-        $res = NewRole::create([
+        $result = NewRole::create([
             'account_id' => UID,
             'title'      => $title,
             'content'    => $content,
@@ -190,7 +190,7 @@ class GMController extends Controller
             'attach_s'   => json_encode($item),
         ]);
 
-        if ($res) {
+        if ($result) {
             return response(Response::Success());
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
@@ -209,23 +209,6 @@ class GMController extends Controller
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
-    }
-
-    public function newRolesGift(Request $request, NewRole $newRole)
-    {
-        $serverId = $request->input('sid');
-        $roleId   = $request->input('uid');
-        $sign     = $request->input('sign');
-
-        if ($sign == md5($roleId.$serverId.$this->new_key)) {
-
-            $result = $newRole->where(['status' => 1])->first();
-
-            if ($result) {
-                $this->sendMailAll($serverId, $result->attach_s, $result->title, $roleId, $result->content, '');
-            }
-        }
-
     }
 
     public function sendMailList(Gmmail $gmmail, Request $request)
@@ -552,7 +535,13 @@ class GMController extends Controller
         return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
     }
 
-    public function giftCodeBatchStore(Request $request, CodeBatch $code_batch)
+    /**
+     * 新增礼包配置
+     * @param Request $request
+     * @param CodeBatch $code_batch
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function codeBatchStore(Request $request, CodeBatch $code_batch)
     {
         $batch_name   = $request->input('batch_name');
         $batch_detail = $request->input('batch_detail');
@@ -565,6 +554,18 @@ class GMController extends Controller
         $use_count    = $request->input('use_count');
         $start_time   = $request->input('start_time');
         $end_time     = $request->input('end_time');
+
+        if (is_numeric(substr($code_prefix, 0, 1))){
+            return response(Response::Error('礼包码前缀不能为数字！', 90003));
+        }
+
+        if (strlen($code_prefix) > 5){
+            return response(Response::Error('礼包码前缀长度不能超过5位', 90003));
+        }
+
+        if ($code_length > 15){
+            return response(Response::Error('礼包码长度不能超过15位！', 90003));
+        }
 
         if ($code_batch->where(['batch_name' => $batch_name])->first()){
             return response(Response::Error(trans('ResponseMsg.GIFT_CODE_BATCH_HAS_EXISTED'), 90003));
@@ -590,7 +591,13 @@ class GMController extends Controller
         return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
     }
 
-    public function giftCodeBatchUpdate(Request $request, CodeBatch $code_batch)
+    /**
+     * 更新礼包配置
+     * @param Request $request
+     * @param CodeBatch $code_batch
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function codeBatchUpdate(Request $request, CodeBatch $code_batch)
     {
         $id           = $request->input('id');
         $batch_name   = $request->input('batch_name');
@@ -635,7 +642,7 @@ class GMController extends Controller
         return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
     }
 
-    public function giftCodeBatchList(Request $request, CodeBatch $code_batch)
+    public function codeBatchList(Request $request, CodeBatch $code_batch)
     {
         $batch_name = $request->input('batch_name');
 
@@ -751,6 +758,46 @@ class GMController extends Controller
         return response(Response::Success($list));
     }
 
+    public function whiteIpStore(Request $request, WhiteIp $white_ip)
+    {
+        $ip        = $request->input('ip');
+        $server_id = $request->input('server_id');
+
+        $white_ip->ip         = $ip;
+        $white_ip->server_id  = $server_id;
+        $white_ip->account_id = UID;
+
+        $result = $white_ip->save();
+
+        if ($result) {
+            return response(Response::Success());
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+    }
+
+    public function whiteIpList(Request $request, WhiteIp $white_ip)
+    {
+        $ip  = $request->input('ip');
+
+        $orm = $white_ip->with([
+            'account' => function($query){
+                $query->select('id', 'real_name');
+            }, 'server'=> function($query){
+                $query->select('id', 'server_name');
+            },
+        ]);
+
+        if ($ip){
+            $orm->where(['ip' => $ip]);
+        }
+
+        $list = $orm->paginate(10);
+
+        return response(Response::Success($list));
+
+    }
+
     protected function convert_arr_key($arr, $key_name, $val_name)
     {
         $arr2 = array();
@@ -855,4 +902,5 @@ class GMController extends Controller
 
         return $result;
     }
+
 }

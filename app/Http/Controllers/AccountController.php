@@ -3,8 +3,6 @@ namespace App\Http\Controllers;
 
 use App\Libray\Response;
 use App\Models\Account;
-use App\Models\Admin;
-use App\Models\Channel;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller

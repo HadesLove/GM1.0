@@ -32,6 +32,8 @@ class Response
     const ROLE_HAS_EXISTED       = 90001;
     const GIFT_HAS_EXISTED       = 90002;
     const GIFT_CODE_BATCH_HAS_EXISTED       = 90003;
+    const SIGN_ERROR             = 90004;
+    const WHITE_IP_NOT_FOUND     = 90005;
 
     static public function Success($Data = []){
         $Res = [

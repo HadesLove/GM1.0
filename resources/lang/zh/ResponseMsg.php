@@ -29,4 +29,6 @@ return [
     'ROLE_HAS_EXISTED'       => '角色已存在',
     'GIFT_HAS_EXISTED'       => '礼包配置已存在',
     'GIFT_CODE_BATCH_HAS_EXISTED'   => '礼包码批次已存在',
+    'SIGN_ERROR'             => 'sign错误',
+    'WHITE_IP_NOT_FOUND'     => 'ip不在白名单范围内',
 ];

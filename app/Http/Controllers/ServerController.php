@@ -12,33 +12,7 @@ class ServerController extends Controller
 
     public function index(Request $request, Server $server)
     {
-        $manager_name = $request->input('name');
-
         $orm = $server->select('id', 'server_name', 'logo', 'type', 'channel_id', 'beginTime', 'endTime', 'note');
-
-        /*$url_args = array(
-            "sid_list"     => [20002],
-        );
-
-        $time = time();
-        $sign_args = json_encode($url_args);
-        $sign = md5("args={$sign_args}&fun=web_op_sync_data&mod=global&sid=20002&time={$time}&key={$this->key}");
-
-        //组装内容
-        $info = array(
-            'args'      => $sign_args,
-            'fun'       => 'web_op_sync_data',
-            'mod'       => 'global',
-            'sid'       => 20002,
-            'time'      => $time,
-            'sign'      => $sign,
-        );
-
-        $res = $this->send_post(env('WXURL'), $info);*/
-
-        /*if ($manager_name){
-            $orm->where(['manager_name' => $manager_name]);
-        }*/
 
         $list = $orm->paginate(20);
 

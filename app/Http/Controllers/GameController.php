@@ -13,7 +13,7 @@ class GameController extends Controller
      */
     public function recharge(Request $request)
     {
-        $uid = $request->input('uid');
+        $uid      = $request->input('uid');
         $serverId = $request->input('server_id');
         $goods_id = $request->input('goods_id');
 
@@ -52,6 +52,22 @@ class GameController extends Controller
      * 聊天公告
      */
     public function chatAnnouncement(Request $request)
+    {
+
+    }
+
+    /**
+     * 开服
+     */
+    public function openSuit()
+    {
+
+    }
+
+    /**
+     * 关服
+     */
+    public function closeSuit()
     {
 
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Libray\Response;
+use App\Models\Content;
 use App\Models\WhiteIp;
 use Illuminate\Http\Request;
 
@@ -16,17 +17,21 @@ class AjaxController extends Controller
         $sid  = $request->input('sid');
         $sign = $request->input('sign');
 
+        if ($sid < 1000){
+            return response(Response::Error('内网测试账号可以正常登录', 20000));
+        }
+
         if($sign !== md5($ip.$sid.$this->key)){
-            return response(Response::Success());
+            return response(Response::Error('不在白名单内禁止登录', 1));
         }
 
-        $reslut = $white_ip->where(['ip' => $ip, 'server_id' => $sid])->first();
+        $result = $white_ip->where(['ip' => $ip, 'server_id' => $sid])->first();
 
-        if($reslut){
-            return response(Response::Error(trans('ResponseMsg.WHITE_IP_NOT_FOUND'), 90005));
+        if($result){
+            return response(Response::Error('登录成功', 20001));
         }
 
-        return response(Response::Success());
+        return response(Response::Error('不在白名单内禁止登录', 1));
     }
 
     public function giftUseCheck(Request $request)
@@ -113,5 +118,22 @@ class AjaxController extends Controller
 
         exit(json_encode($msg? $msg: array()));
 
+    }
+
+    public function getCast(Request $request, Content $content)
+    {
+        $sid = $request->input('sid');
+
+        if (!$sid){
+            return response(Response::Error('必要参数缺失', 404));
+        }
+
+        $reslut = $content
+            ->where(['server_id' => $sid])
+            ->select('content')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        return response(Response::Success($reslut));
     }
 }

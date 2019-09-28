@@ -14,7 +14,8 @@
 Route::any('login', 'LoginController@index');
 
 Route::any('new/role/gift', 'GMController@newRolesGift');
-Route::post('white/ip/check', 'AjaxController@whiteIpCheck');
+Route::any('white/ip/check', 'AjaxController@whiteIpCheck');
+Route::any('get/cast', 'AjaxController@getCast');
 
 Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 

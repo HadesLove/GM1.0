@@ -143,8 +143,6 @@ class DataController extends Controller
      */
     public function wifeList(Request $request)
 	{
-
-
         $orm = DB::connection('wxfyl_l2002')
             ->table('lg_wife')
             ->select('id', 'uid', 'channel', 'wife_id', 'intimacy', 'child_count', 'wife_event_type', 'wife_event_desc', 'old_value', 'add_value', 'new_value', 'time');
@@ -202,7 +200,6 @@ class DataController extends Controller
      */
 	public function roleStreamList(Request $request)
 	{
-
         $orm = DB::connection('wxfyl_l2002')
             ->table('lg_role_stream')
             ->select('id', 'channel', 'userCode', 'serverId', 'roleId', 'loginTime', 'loginOutTime', 'onlineTime', 'createTime');

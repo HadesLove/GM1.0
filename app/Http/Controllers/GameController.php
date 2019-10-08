@@ -232,8 +232,6 @@ class GameController extends Controller
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
-
-
     }
 
     /**
@@ -262,10 +260,30 @@ class GameController extends Controller
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
-
     }
 
-    
+    public function timeTack(Request $request)
+    {
+        $work_time = $request->input('work_time');
+
+        $serverId = intval($request->input('server_id'));
+
+        $url_args = array(
+            "work_time" => $work_time,
+        );
+
+        $time      = time();
+        $fun       = 'web_op_work_day';
+        $mod       = 'global';
+
+        $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
+
+        if ($result['res'] == "1") {
+            return response(Response::Success());
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+    }
     protected function requestWX($url_args, $fun, $mod, $time, $serverId, $key)
     {
         $sign_args = json_encode($url_args);

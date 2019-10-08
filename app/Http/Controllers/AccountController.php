@@ -30,41 +30,6 @@ class AccountController extends Controller
         return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
     }
 
-    public function accountList(Request $request, Account $account)
-    {
-        $account_name = $request->input('name');
-        $manager_id   = $request->input('manager_id');
-
-        $orm = $account->with(['manager' => function ($query){
-            $query->select('id', 'manager_name');
-        }])->select('id', 'account_name', 'real_name', 'manager_id', 'channel', 'created_at', 'status');
-
-        if ($account_name){
-            $orm->where(['account_name' => $account_name]);
-        }
-
-        if ($manager_id){
-            $orm->where(['manager_id' => $manager_id]);
-        }
-        $list = $orm->paginate(5);
-
-        foreach ($list as &$value){
-            $channelVar = json_decode($value['channel'], true);
-
-            if ($channelVar){
-                $channelArray = array();
-                foreach ($channelVar as $key=>$val){
-                    $channel_data = json_decode($val, true);
-                    $channelArray[$key]['id'] = $channel_data['id'];
-                    $channelArray[$key]['channel_name'] = $channel_data['channel_name'];
-                }
-                $value['channel'] = $channelArray;
-            }
-        }
-
-        return response(Response::Success($list));
-    }
-
     public function save(Request $request, Account $account)
     {
         $id         = $request->input('id');
@@ -121,5 +86,40 @@ class AccountController extends Controller
         $info = $account->where(['id' => UID])->first();
 
         return response(Response::Success($info));
+    }
+
+    public function accountList(Request $request, Account $account)
+    {
+        $account_name = $request->input('name');
+        $manager_id   = $request->input('manager_id');
+
+        $orm = $account->with(['manager' => function ($query){
+            $query->select('id', 'manager_name');
+        }])->select('id', 'account_name', 'real_name', 'manager_id', 'channel', 'created_at', 'status');
+
+        if ($account_name){
+            $orm->where(['account_name' => $account_name]);
+        }
+
+        if ($manager_id){
+            $orm->where(['manager_id' => $manager_id]);
+        }
+        $list = $orm->paginate(5);
+
+        foreach ($list as &$value){
+            $channelVar = json_decode($value['channel'], true);
+
+            if ($channelVar){
+                $channelArray = array();
+                foreach ($channelVar as $key=>$val){
+                    $channel_data = json_decode($val, true);
+                    $channelArray[$key]['id'] = $channel_data['id'];
+                    $channelArray[$key]['channel_name'] = $channel_data['channel_name'];
+                }
+                $value['channel'] = $channelArray;
+            }
+        }
+
+        return response(Response::Success($list));
     }
 }

@@ -75,6 +75,7 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('wife/list', 'DataController@wifeList');
     Route::any('child/list', 'DataController@childList');
     Route::any('role/stream/list', 'DataController@roleStreamList');
+    Route::any('resource/list', 'DataController@resourceList');
 
     Route::post('recharge', 'GameController@recharge');
 

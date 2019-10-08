@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Libray\Response;
 use App\Models\Ban;
 use App\Models\Channel;
+use App\Models\Good;
 use App\Models\Server;
 use DB;
 use Illuminate\Http\Request;
@@ -12,8 +13,11 @@ use Illuminate\Http\Request;
 class DataController extends Controller
 {
     /**
-	 * 角色列表
-	 */
+     * 角色列表
+     * @param Request $request
+     * @param Ban $ban
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
 	public function roleList(Request $request, Ban $ban)
 	{
 	    $role_id    = $request->input('role_id');
@@ -132,12 +136,6 @@ class DataController extends Controller
         return response(Response::Success($list));
 	}
 
-	protected function number_segment_between($str_num, $min, $max)
-    {
-        return version_compare($str_num, $min, '>=') and version_compare($str_num, $max, '<=');
-    }
-
-
     /**
      * 宠妻列表
      * @param Request $request
@@ -173,6 +171,31 @@ class DataController extends Controller
 	}
 
     /**
+     * 道具变化列表
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+	public function resourceList(Request $request)
+	{
+        $orm = DB::connection('wxfyl_l2002')
+            ->table('lg_resource')
+            ->select('id', 'server_id', 'role_id', 'action_id', 'action_desc', 'item_id', 'init_value', 'add_value', 'result_value', 'channel', 'role_name', 'user_code', 'time');
+
+        $list = $orm->paginate(20);
+
+        $server = Server::all()->keyBy('id')->toArray();
+        $good   = Good::all()->keyBy('id')->toArray();
+
+        foreach ($list as $key=>$value) {
+            $value->server_name = $server[$value->server_id]['server_name'];
+            $value->item_name   = $good[$value->item_id]['good_name'];
+            $value->time        = date('Y-m-d H:i:s', $value->time);
+        }
+
+        return response(Response::Success($list));
+	}
+
+	/**
      * 角色登录列表
      * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
@@ -197,4 +220,16 @@ class DataController extends Controller
 
         return response(Response::Success($list));
 	}
+
+    /**
+     * 数据区间
+     * @param $str_num
+     * @param $min
+     * @param $max
+     * @return bool
+     */
+	protected function number_segment_between($str_num, $min, $max)
+    {
+        return version_compare($str_num, $min, '>=') and version_compare($str_num, $max, '<=');
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Libray\Response;
 use App\Models\Ban;
+use App\Models\Broadcast;
 use App\Models\Code;
 use App\Models\CodeBatch;
 use App\Models\CodeBox;
@@ -19,6 +20,128 @@ use Monolog\Handler\IFTTTHandler;
 class GMController extends Controller
 {
     private $key = 'rJYgMdja4KXMqwFbAibOM7jhls';
+
+    public function banChat(Request $request)
+    {
+        $uid       = $request->input('role_id');
+        $oper      = $request->input('oper');
+        $server_id = intval($request->input('server_id'));
+
+        $url_args = array(
+            "uid"   => intval($uid),
+            "oper"  => intval($oper),
+        );
+
+        $time = time();
+        $sign_args = json_encode($url_args);
+        $sign = md5("args={$sign_args}&fun=web_op_sys_ban&mod=chat_api&sid={$server_id}&time={$time}&key={$this->key}");
+
+        //组装内容
+        $info = array(
+            'args'      => $sign_args,
+            'fun'       => 'web_op_sys_ban',
+            'mod'       => 'chat_api',
+            'sid'       => $server_id,
+            'time'      => $time,
+            'sign'      => $sign,
+        );
+
+        //发送内容
+        $res = $this->send_post(env('WXURL'), $info);
+
+
+        if ($oper == 1) {
+            $ban = array(
+                'role_id' => $uid,
+                'serverId' => $server_id,
+                'status' => 1,
+                'type' => 1,
+                'reason' => '',
+            );
+
+            $banResult = $this->addBan($ban);
+        }else{
+            $banResult = Ban::where(['role_id' => $uid, 'type' => 1])->update(['status' => 0]);
+        }
+
+        $res = json_decode($res, true);
+
+        if ($res['res'] == "1") {
+            if ($banResult){
+                return response(Response::Success());
+            }
+            return response(Response::Error(trans('ResponseMsg.SPECIFIED_QUESTIONED_USER_NOT_EXIST'), 30001));
+
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+    }
+
+    public function banLogin(Request $request)
+    {
+        $uid       = $request->input('role_id');
+        $oper      = $request->input('oper');
+        $long_line  = $request->input('time', null);
+        $server_id = intval($request->input('server_id'));
+
+        if ($long_line){
+            $day_year = time() + 3600*24*365;
+            $url_args = array(
+                "uid"   => intval($uid),
+                "oper"  => intval($oper),
+                "time"  => intval($day_year),
+            );
+        } else {
+            $url_args = array(
+                "uid"   => intval($uid),
+                "oper"  => intval($oper),
+            );
+        }
+
+        $time = time();
+        $sign_args = json_encode($url_args);
+        $sign = md5("args={$sign_args}&fun=web_op_sys_suspend&mod=login_api&sid={$server_id}&time={$time}&key={$this->key}");
+
+        //组装内容
+        $info = array(
+            'args'      => $sign_args,
+            'fun'       => 'web_op_sys_suspend',
+            'mod'       => 'login_api',
+            'sid'       => $server_id,
+            'time'      => $time,
+            'sign'      => $sign,
+        );
+
+        //发送内容
+        $res = $this->send_post(env('WXURL'), $info);
+
+
+        if ($oper == 1) {
+            $ban = array(
+                'role_id' => $uid,
+                'serverId' => $server_id,
+                'status' => 1,
+                'type' => 2,
+                'reason' => '',
+            );
+
+            $banResult = $this->addBan($ban);
+        }else{
+            $banResult = Ban::where(['role_id' => $uid, 'type' => 2])->update(['status' => 0]);
+        }
+
+        $res = json_decode($res, true);
+
+        if ($res['res'] == "1") {
+            if ($banResult){
+                return response(Response::Success());
+            }
+            return response(Response::Error(trans('ResponseMsg.SPECIFIED_QUESTIONED_USER_NOT_EXIST'), 30001));
+
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+    }
 
     public function sendMail(Request $request)
     {
@@ -139,6 +262,66 @@ class GMController extends Controller
         }
     }
 
+    public function sendMailList(Gmmail $gmmail, Request $request)
+    {
+        $server_id = $request->input('server_id');
+
+        $orm = $gmmail->with([
+                'account' => function($query) {
+                    $query->select('id', 'real_name');
+                },
+                'server' => function($query) {
+                    $query->select('id', 'server_name');
+                },
+                'channel' => function($query) {
+                    $query->select('id', 'channel_name');
+                }
+            ]);
+
+        if ($server_id){
+            $orm->where(['server_id' => $server_id]);
+        }
+
+        $list = $orm->paginate(20);
+
+        $goods = Good::all()->keyBy('id')->toArray();
+
+        foreach ($list as $key => $value){
+            $attach = json_decode($value["attach_s"], true);
+            $goodsInfo    = array();
+            if ($attach) {
+                foreach ($attach as $k=>$val) {
+                    if (isset($goods[$k])) {
+                        $goodsInfo[] = $goods[$k]["good_name"] . "x" . $val;
+                    }
+
+                }
+            }
+            $value['attach'] = $goodsInfo ? implode(";", $goodsInfo) : "（无）";
+
+            if ($value['role_list']){
+                $role = explode("|", $value['role_list']);
+                $role_name = '';
+                foreach($role as $k=>$v){
+                    $roleName = DB::connection('wxfyl')
+                        ->table('user')
+                        ->where(['uid' => $v])
+                        ->select('uid', 'uname')
+                        ->first();
+                    $role_name .= $roleName->uname.'、';
+                }
+                $value['role_name'] = substr($role_name,0,strrpos($role_name,"、"));
+            }else{
+               $value['role_name'] = '全区服';
+               $value['role_list'] = '全区服';
+            }
+
+
+        }
+
+        return response(Response::Success($list));
+    }
+
     public function newRolesGiftList(NewRole $newRole)
     {
         $orm = $newRole->with([
@@ -206,188 +389,6 @@ class GMController extends Controller
 
         if ($res) {
             return response(Response::Success());
-        } else {
-            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
-        }
-    }
-
-    public function sendMailList(Gmmail $gmmail, Request $request)
-    {
-        $server_id = $request->input('server_id');
-
-        $orm = $gmmail->with([
-                'account' => function($query) {
-                    $query->select('id', 'real_name');
-                },
-                'server' => function($query) {
-                    $query->select('id', 'server_name');
-                },
-                'channel' => function($query) {
-                    $query->select('id', 'channel_name');
-                }
-            ]);
-
-        if ($server_id){
-            $orm->where(['server_id' => $server_id]);
-        }
-
-        $list = $orm->paginate(20);
-
-        $goods = Good::all()->keyBy('id')->toArray();
-
-        foreach ($list as $key => $value){
-            $attach = json_decode($value["attach_s"], true);
-            $goodsInfo    = array();
-            if ($attach) {
-                foreach ($attach as $k=>$val) {
-                    if (isset($goods[$k])) {
-                        $goodsInfo[] = $goods[$k]["good_name"] . "x" . $val;
-                    }
-
-                }
-            }
-            $value['attach'] = $goodsInfo ? implode(";", $goodsInfo) : "（无）";
-
-            if ($value['role_list']){
-                $role = explode("|", $value['role_list']);
-                $role_name = '';
-                foreach($role as $k=>$v){
-                    $roleName = DB::connection('wxfyl')
-                        ->table('user')
-                        ->where(['uid' => $v])
-                        ->select('uid', 'uname')
-                        ->first();
-                    $role_name .= $roleName->uname.'、';
-                }
-                $value['role_name'] = substr($role_name,0,strrpos($role_name,"、"));
-            }else{
-               $value['role_name'] = '全区服';
-               $value['role_list'] = '全区服';
-            }
-
-
-        }
-
-        return response(Response::Success($list));
-    }
-
-    public function banChat(Request $request)
-    {
-        $uid       = $request->input('role_id');
-        $oper      = $request->input('oper');
-        $server_id = intval($request->input('server_id'));
-
-        $url_args = array(
-            "uid"   => intval($uid),
-            "oper"  => intval($oper),
-        );
-
-        $time = time();
-        $sign_args = json_encode($url_args);
-        $sign = md5("args={$sign_args}&fun=web_op_sys_ban&mod=chat_api&sid={$server_id}&time={$time}&key={$this->key}");
-
-        //组装内容
-        $info = array(
-            'args'      => $sign_args,
-            'fun'       => 'web_op_sys_ban',
-            'mod'       => 'chat_api',
-            'sid'       => $server_id,
-            'time'      => $time,
-            'sign'      => $sign,
-        );
-
-        //发送内容
-        $res = $this->send_post(env('WXURL'), $info);
-
-
-        if ($oper == 1) {
-            $ban = array(
-                'role_id' => $uid,
-                'serverId' => $server_id,
-                'status' => 1,
-                'type' => 1,
-                'reason' => '',
-            );
-
-            $banResult = $this->addBan($ban);
-        }else{
-            $banResult = Ban::where(['role_id' => $uid, 'type' => 1])->update(['status' => 0]);
-        }
-
-        $res = json_decode($res, true);
-
-        if ($res['res'] == "1") {
-            if ($banResult){
-                return response(Response::Success());
-            }
-            return response(Response::Error(trans('ResponseMsg.SPECIFIED_QUESTIONED_USER_NOT_EXIST'), 30001));
-
-        } else {
-            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
-        }
-    }
-
-    public function banLogin(Request $request)
-    {
-        $uid       = $request->input('role_id');
-        $oper      = $request->input('oper');
-        $long_line  = $request->input('time', null);
-        $server_id = intval($request->input('server_id'));
-
-        if ($long_line){
-            $day_year = time() + 3600*24*365;
-            $url_args = array(
-                "uid"   => intval($uid),
-                "oper"  => intval($oper),
-                "time"  => intval($day_year),
-            );
-        } else {
-            $url_args = array(
-                "uid"   => intval($uid),
-                "oper"  => intval($oper),
-            );
-        }
-
-        $time = time();
-        $sign_args = json_encode($url_args);
-        $sign = md5("args={$sign_args}&fun=web_op_sys_suspend&mod=login_api&sid={$server_id}&time={$time}&key={$this->key}");
-
-        //组装内容
-        $info = array(
-            'args'      => $sign_args,
-            'fun'       => 'web_op_sys_suspend',
-            'mod'       => 'login_api',
-            'sid'       => $server_id,
-            'time'      => $time,
-            'sign'      => $sign,
-        );
-
-        //发送内容
-        $res = $this->send_post(env('WXURL'), $info);
-
-
-        if ($oper == 1) {
-            $ban = array(
-                'role_id' => $uid,
-                'serverId' => $server_id,
-                'status' => 1,
-                'type' => 2,
-                'reason' => '',
-            );
-
-            $banResult = $this->addBan($ban);
-        }else{
-            $banResult = Ban::where(['role_id' => $uid, 'type' => 2])->update(['status' => 0]);
-        }
-
-        $res = json_decode($res, true);
-
-        if ($res['res'] == "1") {
-            if ($banResult){
-                return response(Response::Success());
-            }
-            return response(Response::Error(trans('ResponseMsg.SPECIFIED_QUESTIONED_USER_NOT_EXIST'), 30001));
-
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
@@ -794,6 +795,93 @@ class GMController extends Controller
         $list = $orm->paginate(10);
 
         return response(Response::Success($list));
+
+    }
+
+    /**
+     * 跑马灯列表
+     * @param Request $request
+     * @param Broadcast $broadcast
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function BroadcastList(Request $request, Broadcast $broadcast)
+    {
+        $account_id  = $request->input('account_id');
+
+        $orm = $broadcast->with([
+            'account' => function($query){
+                $query->select('id', 'real_name');
+            }
+        ]);
+
+        if ($account_id){
+            $orm->where(['account_id' => $account_id]);
+        }
+
+        $list = $orm->paginate(10);
+
+        return response(Response::Success($list));
+
+    }
+
+    /**
+     * 新增跑马灯
+     * @param Request $request
+     * @param Broadcast $broadcast
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function BroadcastStore(Request $request, Broadcast $broadcast)
+    {
+        $interval  = $request->input('interval');
+        $times     = $request->input('times');
+        $content   = $request->input('content');
+        $server_id = $request->input('server_id');
+
+        $broadcast->interval   = $interval;
+        $broadcast->times      = $times;
+        $broadcast->content    = $content;
+        $broadcast->server_id  = $server_id;
+        $broadcast->account_id = UID;
+
+        $result = $broadcast->save();
+
+        if ($result) {
+            return response(Response::Success());
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+
+    }
+
+    /**
+     * 更新跑马灯
+     * @param Request $request
+     * @param Broadcast $broadcast
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function BroadcastUpdate(Request $request, Broadcast $broadcast)
+    {
+        $id        = $request->input('id');
+        $interval  = $request->input('interval');
+        $times     = $request->input('times');
+        $content   = $request->input('content');
+        $server_id = $request->input('server_id');
+
+        $result = $broadcast
+            ->where(['id' => $id])
+            ->update([
+                'interval'   => $interval,
+                'times'      => $times,
+                'content'    => $content,
+                'server_id'  => $server_id,
+                'updated_at' => date('Y-m-d H:i:s', time()),
+            ]);
+
+        if ($result) {
+            return response(Response::Success());
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
 
     }
 

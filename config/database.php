@@ -77,6 +77,20 @@ return [
             'engine' => null,
         ],
 
+        'wxfyl_l2002' => [
+            'driver' => 'mysql',
+            'host' => '134.175.116.186',
+            'port' => '3306',
+            'database' => 'jh_l2002',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

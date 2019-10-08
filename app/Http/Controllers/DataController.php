@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class DataController extends Controller
 {
     /**
-	 * 新增玩家
+	 * 角色列表
 	 */
 	public function roleList(Request $request, Ban $ban)
 	{
@@ -136,4 +136,65 @@ class DataController extends Controller
     {
         return version_compare($str_num, $min, '>=') and version_compare($str_num, $max, '<=');
     }
+
+
+    /**
+     * 宠妻列表
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function wifeList(Request $request)
+	{
+
+
+        $orm = DB::connection('wxfyl_l2002')
+            ->table('lg_wife')
+            ->select('id', 'uid', 'channel', 'wife_id', 'intimacy', 'child_count', 'wife_event_type', 'wife_event_desc', 'old_value', 'add_value', 'new_value', 'time');
+
+        $list = $orm->paginate(20);
+
+        return response(Response::Success($list));
+	}
+
+    /**
+     * 子女列表
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+	public function childList(Request $request)
+	{
+        $orm = DB::connection('wxfyl_l2002')
+            ->table('lg_child')
+            ->select('id', 'uid', 'cid', 'child_idx', 'child_sex', 'child_name', 'child_lv', 'child_event_type', 'child_event_desc', 'time');
+
+        $list = $orm->paginate(20);
+
+        return response(Response::Success($list));
+	}
+
+    /**
+     * 角色登录列表
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+	public function roleStreamList(Request $request)
+	{
+
+        $orm = DB::connection('wxfyl_l2002')
+            ->table('lg_role_stream')
+            ->select('id', 'channel', 'userCode', 'serverId', 'roleId', 'loginTime', 'loginOutTime', 'onlineTime', 'createTime');
+
+        $list = $orm->paginate(20);
+
+        $server  = Server::all()->keyBy('id')->toArray();
+
+	    foreach ($list as $key=>$value) {
+            $value->server_name  = $server[$value->serverId]['server_name'];
+            $value->loginTime    = date('Y-m-d H:i:s', $value->loginTime);
+            $value->loginOutTime = date('Y-m-d H:i:s', $value->loginOutTime);
+            $value->createTime   = date('Y-m-d H:i:s', $value->createTime);
+        }
+
+        return response(Response::Success($list));
+	}
 }

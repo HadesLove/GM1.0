@@ -72,6 +72,9 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('white/ip/list', 'GMController@whiteIpList');
 
     Route::any('role/list', 'DataController@roleList');
+    Route::any('wife/list', 'DataController@wifeList');
+    Route::any('child/list', 'DataController@childList');
+    Route::any('role/stream/list', 'DataController@roleStreamList');
 
     Route::post('recharge', 'GameController@recharge');
 

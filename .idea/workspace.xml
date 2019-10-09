@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="412220fb-f3d4-4389-8217-bc2e2840c339" name="Default Changelist" comment="" />
+=======
+    <list default="true" id="412220fb-f3d4-4389-8217-bc2e2840c339" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/DataController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/DataController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/GameController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/GameController.php" afterDir="false" />
+    </list>
+>>>>>>> 42a475f2e3f7de675c6bf345f8c84eabda1fbfb4
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -10,6 +18,9 @@
   </component>
   <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+    <execution>
+      <executable />
+    </execution>
   </component>
   <component name="FileColors">
     <fileColor scope="Non-Project Files (Material Default)" color="2E3C43" />
@@ -17,6 +28,7 @@
     <fileColor scope="Non-Project Files (Material Lighter)" color="eae8e8" />
     <fileColor scope="Non-Project Files (Material Palenight)" color="2f2e43" />
   </component>
+<<<<<<< HEAD
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
@@ -54,6 +66,8 @@
       </file>
     </leaf>
   </component>
+=======
+>>>>>>> 42a475f2e3f7de675c6bf345f8c84eabda1fbfb4
   <component name="FindInProjectRecents">
     <findStrings>
       <find>$new_key</find>
@@ -71,25 +85,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/app/Models/Server.php" />
-        <option value="$PROJECT_DIR$/resources/lang/zh/ResponseMsg.php" />
-        <option value="$PROJECT_DIR$/app/Libray/Response.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/ServerController.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/AjaxController.php" />
-        <option value="$PROJECT_DIR$/app/Models/Broadcast.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/GMController.php" />
-        <option value="$PROJECT_DIR$/app/Libray/Post.php" />
-        <option value="$PROJECT_DIR$/config/database.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/GameController.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/AccountController.php" />
-        <option value="$PROJECT_DIR$/routes/api.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/DataController.php" />
-      </list>
-    </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration">
     <include_path>
@@ -189,64 +184,12 @@
       <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
     </include_path>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="819" />
-  </component>
   <component name="ProjectId" id="1R5dythUNMjqeZWwlLdytAq14We" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="GmV1.nb" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GmV1.nb" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="GmV1.nb" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GmV1.nb" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="GmV1.nb" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GmV1.nb" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="Http" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="GmV1.nb" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GmV1.nb" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="Http" type="462c0819:PsiDirectoryNode" />
-              <item name="Controllers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="GmV1.nb" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GmV1.nb" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="Models" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="GmV1.nb" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GmV1.nb" type="462c0819:PsiDirectoryNode" />
-              <item name="routes" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
-  </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Color Scheme Font" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -289,6 +232,7 @@
       <workItem from="1570257583993" duration="26000" />
       <workItem from="1570258180628" duration="2000" />
       <workItem from="1570414285388" duration="9139000" />
+<<<<<<< HEAD
       <workItem from="1570516121812" duration="7065000" />
     </task>
     <servers />
@@ -296,6 +240,13 @@
   <component name="TimeTrackingManager">
     <option name="totallyTimeSpent" value="51337000" />
   </component>
+=======
+      <workItem from="1570516121812" duration="6621000" />
+      <workItem from="1570546853002" duration="988000" />
+    </task>
+    <servers />
+  </component>
+>>>>>>> 42a475f2e3f7de675c6bf345f8c84eabda1fbfb4
   <component name="TodoView">
     <todo-panel id="selected-file">
       <is-autoscroll-to-source value="true" />
@@ -305,6 +256,7 @@
       <is-autoscroll-to-source value="true" />
     </todo-panel>
   </component>
+<<<<<<< HEAD
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="819" extended-state="0" />
     <layout>
@@ -693,5 +645,20 @@
         </state>
       </provider>
     </entry>
+=======
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+>>>>>>> 42a475f2e3f7de675c6bf345f8c84eabda1fbfb4
   </component>
 </project>

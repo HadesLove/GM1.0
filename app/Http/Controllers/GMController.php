@@ -811,7 +811,10 @@ class GMController extends Controller
         $orm = $broadcast->with([
             'account' => function($query){
                 $query->select('id', 'real_name');
-            }
+            },
+            'server' => function($query){
+                $query->select('id', 'server_name');
+            },
         ]);
 
         if ($account_id){

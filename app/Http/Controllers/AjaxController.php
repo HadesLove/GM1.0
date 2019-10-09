@@ -11,6 +11,12 @@ class AjaxController extends Controller
 {
     private $key = '51Game@123.com&%#';
 
+    /**
+     * 白名单验证
+     * @param Request $request
+     * @param WhiteIp $white_ip
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function whiteIpCheck(Request $request, WhiteIp $white_ip)
     {
         $ip   = $request->input('ip');
@@ -120,6 +126,12 @@ class AjaxController extends Controller
 
     }
 
+    /**
+     * 获取渠道公告
+     * @param Request $request
+     * @param Content $content
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function getCast(Request $request, Content $content)
     {
         $sid = $request->input('sid');

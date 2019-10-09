@@ -13,9 +13,9 @@
 */
 Route::any('login', 'LoginController@index');
 
-Route::any('new/role/gift', 'GMController@newRolesGift');
-Route::any('white/ip/check', 'AjaxController@whiteIpCheck');
 Route::any('get/cast', 'AjaxController@getCast');
+Route::any('new/role/gift', 'AjaxController@newRolesGift');
+Route::any('white/ip/check', 'AjaxController@whiteIpCheck');
 
 Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 
@@ -70,6 +70,9 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 
     Route::post('white/ip', 'GMController@whiteIpStore');
     Route::any('white/ip/list', 'GMController@whiteIpList');
+    Route::any('broadcast/list', 'GMController@BroadcastList');
+    Route::post('broadcast', 'GMController@BroadcastStore');
+    Route::post('broadcast/{id}', 'GMController@BroadcastUpdate');
 
     Route::any('role/list', 'DataController@roleList');
     Route::any('wife/list', 'DataController@wifeList');
@@ -78,6 +81,15 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('resource/list', 'DataController@resourceList');
 
     Route::post('recharge', 'GameController@recharge');
+    Route::post('time/tack', 'GameController@timeTack');
+    Route::post('send/prop', 'GameController@sendProp');
+    Route::post('unlock/ip', 'GameController@unlockIp');
+    Route::post('closure/ip', 'GameController@closureIp');
+    Route::post('open/suit', 'GameController@openSuit');
+    Route::post('close/suit', 'GameController@closeSuit');
+    Route::post('send/marquee', 'GameController@sendMarquee');
+    Route::post('cancel/marquee', 'GameController@cancelMarquee');
+    Route::post('chat/announcement', 'GameController@chatAnnouncement');
 
     Route::any('server/list', 'ServerController@index');
     Route::post('server/{id}', 'ServerController@save');

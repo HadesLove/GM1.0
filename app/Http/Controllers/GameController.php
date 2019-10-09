@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Broadcast;
 use Illuminate\Http\Request;
 use App\Libray\RequestTool;
+use App\Libray\Response;
 
 class GameController extends Controller
 {
@@ -228,6 +229,7 @@ class GameController extends Controller
         $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
 
         if ($result['res'] == "1") {
+            $broadcast->where(['id' => $id])->update(['status' => 0, 'updated_at' => date('Y-m-d H:i:s', time())]);
             return response(Response::Success());
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
@@ -256,12 +258,16 @@ class GameController extends Controller
         $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
 
         if ($result['res'] == "1") {
+            $broadcast->where(['id' => $id])->update(['status' => 1, 'updated_at' => date('Y-m-d H:i:s', time())]);
             return response(Response::Success());
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
     }
 
+    /**
+     * 定时开服
+     */
     public function timeTack(Request $request)
     {
         $work_time = $request->input('work_time');
@@ -284,6 +290,18 @@ class GameController extends Controller
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
     }
+
+    /**
+     * 公共请求方法
+     *
+     * @param $url_args
+     * @param $fun
+     * @param $mod
+     * @param $time
+     * @param $serverId
+     * @param $key
+     * @return mixed
+     */
     protected function requestWX($url_args, $fun, $mod, $time, $serverId, $key)
     {
         $sign_args = json_encode($url_args);

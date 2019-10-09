@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="412220fb-f3d4-4389-8217-bc2e2840c339" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/AccountController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/AccountController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/DataController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/DataController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
-    </list>
+    <list default="true" id="412220fb-f3d4-4389-8217-bc2e2840c339" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,15 +22,22 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DataController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="530">
-              <caret line="202" column="13" selection-start-line="202" selection-start-column="13" selection-end-line="202" selection-end-column="13" />
+            <state relative-caret-position="285">
+              <caret line="170" column="5" lean-forward="true" selection-start-line="170" selection-start-column="5" selection-end-line="170" selection-end-column="5" />
               <folding>
+                <element signature="e#259#423#0#PHP" />
                 <element signature="e#235#4565#0#PHP" />
                 <element signature="e#1659#4510#0#PHP" />
-                <element signature="e#4568#4739#0#PHP" />
+                <element signature="e#4924#5065#0#PHP" />
                 <element signature="e#4892#5276#0#PHP" />
+                <element signature="e#5282#5423#0#PHP" />
                 <element signature="e#5425#5782#0#PHP" />
+                <element signature="e#6732#6875#0#PHP" />
                 <element signature="e#6709#7093#0#PHP" />
+                <element signature="e#6888#7031#0#PHP" />
+                <element signature="e#7033#7805#0#PHP" />
+                <element signature="e#7636#7740#0#PHP" />
+                <element signature="e#7634#7805#0#PHP" />
               </folding>
             </state>
           </provider>
@@ -286,12 +289,12 @@
       <workItem from="1570257583993" duration="26000" />
       <workItem from="1570258180628" duration="2000" />
       <workItem from="1570414285388" duration="9139000" />
-      <workItem from="1570516121812" duration="6621000" />
+      <workItem from="1570516121812" duration="7065000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="50893000" />
+    <option name="totallyTimeSpent" value="51337000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -304,9 +307,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="819" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26357144" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26357144" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -321,7 +323,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49928573" weight="0.32907802" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50142854" side_tool="true" weight="0.32907802" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49857143" weight="0.3280116" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49857143" visible="true" weight="0.3280116" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -671,15 +673,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/DataController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="530">
-          <caret line="202" column="13" selection-start-line="202" selection-start-column="13" selection-end-line="202" selection-end-column="13" />
+        <state relative-caret-position="285">
+          <caret line="170" column="5" lean-forward="true" selection-start-line="170" selection-start-column="5" selection-end-line="170" selection-end-column="5" />
           <folding>
+            <element signature="e#259#423#0#PHP" />
             <element signature="e#235#4565#0#PHP" />
             <element signature="e#1659#4510#0#PHP" />
-            <element signature="e#4568#4739#0#PHP" />
+            <element signature="e#4924#5065#0#PHP" />
             <element signature="e#4892#5276#0#PHP" />
+            <element signature="e#5282#5423#0#PHP" />
             <element signature="e#5425#5782#0#PHP" />
+            <element signature="e#6732#6875#0#PHP" />
             <element signature="e#6709#7093#0#PHP" />
+            <element signature="e#6888#7031#0#PHP" />
+            <element signature="e#7033#7805#0#PHP" />
+            <element signature="e#7636#7740#0#PHP" />
+            <element signature="e#7634#7805#0#PHP" />
           </folding>
         </state>
       </provider>

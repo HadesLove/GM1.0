@@ -13,4 +13,9 @@ class IpOperation extends Model
     {
         return $this->hasOne(Account::class, 'id', 'account_id');
     }
+
+    public function server()
+    {
+        return $this->hasOne(Server::class, 'id', 'server_id');
+    }
 }

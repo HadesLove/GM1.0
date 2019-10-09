@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Broadcast;
+use App\Models\IpOperation;
 use Illuminate\Http\Request;
 use App\Libray\RequestTool;
 use App\Libray\Response;
@@ -14,7 +15,7 @@ class GameController extends Controller
     /**
      * 封停ip
      */
-    public function closureIp(Request $request)
+    public function closureIp(Request $request, IpOperation $ip_operation)
     {
         $ip       = $request->input('ip');
         $times    = $request->input('times');
@@ -23,7 +24,7 @@ class GameController extends Controller
         $url_args = array(
             "ip"    => $ip,
             "oper"  => 1,
-            "time"  => intval($times)
+            "time"  => intval($times*86400 + time())
         );
 
         $time      = time();
@@ -33,6 +34,13 @@ class GameController extends Controller
         $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
 
         if ($result['res'] == "1") {
+            $ip_operation->ip         = $ip;
+            $ip_operation->status     = 1;
+            $ip_operation->time       = $times;
+            $ip_operation->account_id = UID;
+            $ip_operation->server_id  = $serverId;
+            $ip_operation->save();
+
             return response(Response::Success());
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
@@ -42,13 +50,18 @@ class GameController extends Controller
     /**
      * 解封ip
      */
-    public function unlockIp(Request $request)
+    public function unlockIp(Request $request, IpOperation $ip_operation)
     {
-        $ip       = $request->input('ip');
-        $serverId = intval($request->input('server_id'));
+        $id       = $request->input('id');
+
+        $res = $ip_operation->where(['id' => $id])->first();
+
+        if (!$res){
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
 
         $url_args = array(
-            "ip"    => $ip,
+            "ip"    => $res->ip,
             "oper"  => 0,
         );
 
@@ -56,9 +69,10 @@ class GameController extends Controller
         $fun       = 'web_op_sys_ip_suspend';
         $mod       = 'login_api';
 
-        $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
+        $result = $this->requestWX($url_args, $fun, $mod, $time, intval($res->server_id), $this->key);
 
         if ($result['res'] == "1") {
+            $ip_operation->where(['id' => $id])->update(['status' => 0]);
             return response(Response::Success());
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
@@ -146,9 +160,9 @@ class GameController extends Controller
     public function sendProp(Request $request)
     {
         $serverId = $request->input('server_id');
-        $uid = $request->input('uid');
-        $item_id = $request->input('item_id');
-        $count = $request->input('count');
+        $uid      = $request->input('uid');
+        $item_id  = $request->input('item_id');
+        $count    = $request->input('count');
 
         $url_args = array(
             "uid"     => $uid,
@@ -156,9 +170,9 @@ class GameController extends Controller
             "count"   => $count,
         );
 
-        $time      = time();
-        $fun       = 'web_op_sys_send_item';
-        $mod       = 'pay_api';
+        $time = time();
+        $fun  = 'web_op_sys_send_item';
+        $mod  = 'pay_api';
 
         $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
 
@@ -202,6 +216,10 @@ class GameController extends Controller
         $id = $request->input('id');
 
         $res = $broadcast->where(['id' => $id])->first();
+
+        if (!$res){
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
 
         $str_long_content = strlen($res->content);
         $contents = '';

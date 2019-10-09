@@ -149,6 +149,10 @@ class DataController extends Controller
 
         $list = $orm->paginate(20);
 
+        foreach ($list as $key=>$value) {
+            $value->time        = date('Y-m-d H:i:s', $value->time);
+        }
+
         return response(Response::Success($list));
 	}
 
@@ -217,6 +221,21 @@ class DataController extends Controller
 
         return response(Response::Success($list));
 	}
+
+	public function chatList(Request $request)
+    {
+        $orm = DB::connection('wxfyl_l2002')
+            ->table('lg_chat')
+            ->select('id', 'uid', 'chatTime', 'chatChannel', 'chatText',);
+
+        $list = $orm->paginate(20);
+
+	    foreach ($list as $key=>$value) {
+            $value->chatTime   = date('Y-m-d H:i:s', $value->chatTime);
+        }
+
+        return response(Response::Success($list));
+    }
 
     /**
      * 数据区间

@@ -11,6 +11,7 @@ use App\Models\CodeBox;
 use App\Models\Content;
 use App\Models\Gmmail;
 use App\Models\Good;
+use App\Models\IpOperation;
 use App\Models\NewRole;
 use App\Models\WhiteIp;
 use Illuminate\Http\Request;
@@ -642,6 +643,12 @@ class GMController extends Controller
         return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
     }
 
+    /**
+     * 礼包配置列表
+     * @param Request $request
+     * @param CodeBatch $code_batch
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function codeBatchList(Request $request, CodeBatch $code_batch)
     {
         $batch_name = $request->input('batch_name');
@@ -886,6 +893,32 @@ class GMController extends Controller
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
 
+    }
+
+    /**
+     * 封停IP列表
+     * @param Request $request
+     * @param IpOperation $ip_operation
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function ClosureIpList(Request $request, IpOperation $ip_operation)
+    {
+        $orm = $ip_operation->with([
+            'account' => function($query){
+                $query->select('id', 'real_name');
+            },
+            'server' => function($query){
+                $query->select('id', 'server_name');
+            },
+        ])->where(['status' => 1]);
+
+        $list = $orm->paginate(10);
+
+        foreach ($list as $key=>$value){
+            $value->cloureTime = date('Y-m-d H:i:s',intval($value->time*86400 + strtotime($value->created_at)));
+        }
+
+        return response(Response::Success($list));
     }
 
     protected function convert_arr_key($arr, $key_name, $val_name)

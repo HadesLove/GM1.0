@@ -73,12 +73,14 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('broadcast/list', 'GMController@BroadcastList');
     Route::post('broadcast', 'GMController@BroadcastStore');
     Route::post('broadcast/{id}', 'GMController@BroadcastUpdate');
+    Route::any('closure/ip/list', 'GMController@ClosureIpList');
 
     Route::any('role/list', 'DataController@roleList');
     Route::any('wife/list', 'DataController@wifeList');
     Route::any('child/list', 'DataController@childList');
     Route::any('role/stream/list', 'DataController@roleStreamList');
     Route::any('resource/list', 'DataController@resourceList');
+    Route::any('chat/list', 'DataController@chatList');
 
     Route::post('recharge', 'GameController@recharge');
     Route::post('time/tack', 'GameController@timeTack');

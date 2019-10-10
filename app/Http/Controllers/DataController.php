@@ -226,7 +226,7 @@ class DataController extends Controller
     {
         $orm = DB::connection('wxfyl_l2002')
             ->table('lg_chat')
-            ->select('id', 'uid', 'chatTime', 'chatChannel', 'chatText',);
+            ->select('id', 'uid', 'chatTime', 'chatChannel', 'chatText');
 
         $list = $orm->paginate(20);
 

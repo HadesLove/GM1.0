@@ -9,6 +9,7 @@ use App\Models\Good;
 use App\Models\Server;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class DataController extends Controller
 {
@@ -149,8 +150,21 @@ class DataController extends Controller
 
         $list = $orm->paginate(20);
 
+        $role = DB::connection('wxfyl_s2002')
+            ->table('user')
+            ->select('uid', 'uname')
+            ->get()->toArray();
+
+        $nameCount = array_column($role, null, 'uid');
+
         foreach ($list as $key=>$value) {
             $value->time        = date('Y-m-d H:i:s', $value->time);
+
+            if ($nameCount[$value->uid]){
+                $value->role_name = $nameCount[$value->uid]->uname;
+            }else{
+                $value->role_name = '-';
+            }
         }
 
         return response(Response::Success($list));
@@ -168,6 +182,23 @@ class DataController extends Controller
             ->select('id', 'uid', 'cid', 'child_idx', 'child_sex', 'child_name', 'child_lv', 'child_event_type', 'child_event_desc', 'time');
 
         $list = $orm->paginate(20);
+
+        $role = DB::connection('wxfyl_s2002')
+            ->table('user')
+            ->select('uid', 'uname')
+            ->get()->toArray();
+
+        $nameCount = array_column($role, null, 'uid');
+
+        foreach ($list as $key=>$value) {
+            $value->time        = date('Y-m-d H:i:s', $value->time);
+
+            if ($nameCount[$value->uid]){
+                $value->role_name = $nameCount[$value->uid]->uname;
+            }else{
+                $value->role_name = '-';
+            }
+        }
 
         return response(Response::Success($list));
 	}
@@ -212,26 +243,130 @@ class DataController extends Controller
 
         $server  = Server::all()->keyBy('id')->toArray();
 
+        $role = DB::connection('wxfyl_s2002')
+            ->table('user')
+            ->select('uid', 'uname')
+            ->get()->toArray();
+
+        $nameCount = array_column($role, null, 'uid');
+
 	    foreach ($list as $key=>$value) {
             $value->server_name  = $server[$value->serverId]['server_name'];
             $value->loginTime    = date('Y-m-d H:i:s', $value->loginTime);
             $value->loginOutTime = date('Y-m-d H:i:s', $value->loginOutTime);
             $value->createTime   = date('Y-m-d H:i:s', $value->createTime);
+
+            if ($nameCount[$value->roleId]){
+                $value->role_name = $nameCount[$value->roleId]->uname;
+            }else{
+                $value->role_name = '-';
+            }
         }
 
         return response(Response::Success($list));
 	}
 
-	public function chatList(Request $request)
+    /**
+     * 聊天列表
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+	public function chatList(Request $request, Ban $ban)
     {
+        $orm = DB::connection('wxfyl_l2002')
+            ->table('lg_chat')
+            ->select('id', 'uid', 'chatTime', 'chatChannel', 'chatText')
+            ->orderBy('id', 'asc');
+
+        $list = $orm->paginate(20);
+
+        $role = DB::connection('wxfyl_s2002')
+            ->table('user')
+            ->select('uid', 'uname')
+            ->get()->toArray();
+
+        $nameCount = array_column($role, null, 'uid');
+
+        foreach ($list as $key=>$value) {
+            $value->chatTime   = date('Y-m-d H:i:s', $value->chatTime);
+
+            if ($nameCount[$value->uid]){
+                $value->role_name = $nameCount[$value->uid]->uname;
+            }else{
+                $value->role_name = '-';
+            }
+
+            $status = $ban->where(['role_id' => $value->uid, 'serverId' => 2002, 'status' => 1, 'type' => 1])->select('type')->first();
+            $value->status = '';
+
+            if ($status) {
+                if ($status->type == 1) {
+                    $value->status .= '禁言';
+                }
+            }
+            if (!$value->status){
+                $value->status = '正常';
+            }
+        }
+
+        return response(Response::Success($list));
+    }
+
+    /**
+     * 实时聊天监控
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function RealTimeChat(Request $request, Ban $ban)
+    {
+        $id = $request->input('id');
+
+        if (!Redis::get('real_time')){
+            $time = time();
+            Redis::set('real_time', $time);
+            Redis::expire('real_time', 600);
+        }
+
         $orm = DB::connection('wxfyl_l2002')
             ->table('lg_chat')
             ->select('id', 'uid', 'chatTime', 'chatChannel', 'chatText');
 
-        $list = $orm->paginate(20);
+        if ($id){
+            Redis::set('real_time', null);
+            $orm->where('id', '>', $id);
+        }else{
+            $orm->where('chatTime', '>', Redis::get('real_time'));
+        }
 
-	    foreach ($list as $key=>$value) {
+        $list = $orm->get();
+
+	    $role = DB::connection('wxfyl_s2002')
+            ->table('user')
+            ->select('uid', 'uname')
+            ->get()->toArray();
+
+        $nameCount = array_column($role, null, 'uid');
+
+        foreach ($list as $key=>$value) {
             $value->chatTime   = date('Y-m-d H:i:s', $value->chatTime);
+
+            if ($nameCount[$value->uid]){
+                $value->role_name = $nameCount[$value->uid]->uname;
+            }else{
+                $value->role_name = '-';
+            }
+
+            $status = $ban->where(['role_id' => $value->uid, 'serverId' => 2002, 'status' => 1, 'type' => 1])->select('type')->first();
+            $value->status = '';
+
+            if ($status) {
+                if ($status->type == 1) {
+                    $value->status .= '禁言';
+                }
+            }
+            if (!$value->status){
+                $value->status = '正常';
+            }
         }
 
         return response(Response::Success($list));

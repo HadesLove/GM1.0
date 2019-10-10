@@ -22,62 +22,6 @@ class GMController extends Controller
 {
     private $key = 'rJYgMdja4KXMqwFbAibOM7jhls';
 
-    public function banChat(Request $request)
-    {
-        $uid       = $request->input('role_id');
-        $oper      = $request->input('oper');
-        $server_id = intval($request->input('server_id'));
-
-        $url_args = array(
-            "uid"   => intval($uid),
-            "oper"  => intval($oper),
-        );
-
-        $time = time();
-        $sign_args = json_encode($url_args);
-        $sign = md5("args={$sign_args}&fun=web_op_sys_ban&mod=chat_api&sid={$server_id}&time={$time}&key={$this->key}");
-
-        //组装内容
-        $info = array(
-            'args'      => $sign_args,
-            'fun'       => 'web_op_sys_ban',
-            'mod'       => 'chat_api',
-            'sid'       => $server_id,
-            'time'      => $time,
-            'sign'      => $sign,
-        );
-
-        //发送内容
-        $res = $this->send_post(env('WXURL'), $info);
-
-
-        if ($oper == 1) {
-            $ban = array(
-                'role_id' => $uid,
-                'serverId' => $server_id,
-                'status' => 1,
-                'type' => 1,
-                'reason' => '',
-            );
-
-            $banResult = $this->addBan($ban);
-        }else{
-            $banResult = Ban::where(['role_id' => $uid, 'type' => 1])->update(['status' => 0]);
-        }
-
-        $res = json_decode($res, true);
-
-        if ($res['res'] == "1") {
-            if ($banResult){
-                return response(Response::Success());
-            }
-            return response(Response::Error(trans('ResponseMsg.SPECIFIED_QUESTIONED_USER_NOT_EXIST'), 30001));
-
-        } else {
-            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
-        }
-    }
-
     public function banLogin(Request $request)
     {
         $uid       = $request->input('role_id');

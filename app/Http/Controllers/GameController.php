@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ban;
 use App\Models\Broadcast;
 use App\Models\IpOperation;
 use Illuminate\Http\Request;
@@ -11,6 +12,50 @@ use App\Libray\Response;
 class GameController extends Controller
 {
     private $key = 'rJYgMdja4KXMqwFbAibOM7jhls';
+
+    /**
+     * 禁言解禁
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function banChat(Request $request, Ban $ban)
+    {
+        $uid       = $request->input('role_id');
+        $oper      = $request->input('oper');
+        $server_id = intval($request->input('server_id'));
+
+        $url_args = array(
+            "uid"   => intval($uid),
+            "oper"  => intval($oper),
+        );
+
+        $time      = time();
+        $fun       = 'web_op_sys_ban';
+        $mod       = 'chat_api';
+
+        $result = $this->requestWX($url_args, $fun, $mod, $time, $server_id, $this->key);
+
+        if ($oper == 1) {
+            $ban->role_id  = $uid;
+            $ban->serverId = $server_id;
+            $ban->status   = 1;
+            $ban->type     = 1;
+            $ban->reason   = '';
+            $banResult     = $ban->save();
+        }else{
+            $banResult = Ban::where(['role_id' => $uid, 'type' => 1])->update(['status' => 0]);
+        }
+
+        if ($result['res'] == "1") {
+            if ($banResult){
+                return response(Response::Success());
+            }
+            return response(Response::Error(trans('ResponseMsg.SPECIFIED_QUESTIONED_USER_NOT_EXIST'), 30001));
+
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+    }
 
     /**
      * 封停ip

@@ -16,6 +16,7 @@ Route::any('login', 'LoginController@index');
 Route::any('get/cast', 'AjaxController@getCast');
 Route::any('new/role/gift', 'AjaxController@newRolesGift');
 Route::any('white/ip/check', 'AjaxController@whiteIpCheck');
+Route::any('test', 'DataController@test');
 
 Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 
@@ -81,7 +82,9 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('role/stream/list', 'DataController@roleStreamList');
     Route::any('resource/list', 'DataController@resourceList');
     Route::any('chat/list', 'DataController@chatList');
+    Route::any('real/time/chat', 'DataController@RealTimeChat');
 
+    Route::post('ban/chat', 'GameController@banChat');
     Route::post('recharge', 'GameController@recharge');
     Route::post('time/tack', 'GameController@timeTack');
     Route::post('send/prop', 'GameController@sendProp');

@@ -45,6 +45,11 @@ class LoginController extends Controller
         return response(Response::Success($Token));
     }
 
+    public function logout()
+    {
+
+    }
+
     protected function setLoginToken($user)
     {
         $Token = [

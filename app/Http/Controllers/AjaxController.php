@@ -127,7 +127,7 @@ class AjaxController extends Controller
     }
 
     /**
-     * 获取渠道公告
+     * 获取渠道登录公告
      * @param Request $request
      * @param Content $content
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response

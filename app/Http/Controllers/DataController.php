@@ -373,6 +373,41 @@ class DataController extends Controller
     }
 
     /**
+     * 订单列表
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function OrderList(Request $request)
+    {
+        $orm = DB::connection('wxfyl_order')
+            ->table('lg_pay')
+            ->select('orderId', 'tranId', 'goodsId', 'uid', 'time', 'sid', 'cid');
+
+        $list = $orm->paginate(20);
+
+	    $role = DB::connection('wxfyl_s2002')
+            ->table('user')
+            ->select('uid', 'uname')
+            ->get()->toArray();
+
+        $nameCount = array_column($role, null, 'uid');
+
+        $server = Server::all()->keyBy('id')->toArray();
+        foreach ($list as $key=>$value) {
+            $value->time   = date('Y-m-d H:i:s', $value->time);
+            $value->server_name = $server[$value->sid]['server_name'];
+
+            if ($nameCount[$value->uid]){
+                $value->role_name = $nameCount[$value->uid]->uname;
+            }else{
+                $value->role_name = '-';
+            }
+        }
+
+        return response(Response::Success($list));
+    }
+
+    /**
      * 数据区间
      * @param $str_num
      * @param $min

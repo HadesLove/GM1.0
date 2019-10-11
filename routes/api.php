@@ -75,6 +75,8 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::post('broadcast', 'GMController@BroadcastStore');
     Route::post('broadcast/{id}', 'GMController@BroadcastUpdate');
     Route::any('closure/ip/list', 'GMController@ClosureIpList');
+    Route::any('announcement/list', 'GMController@AnnouncementList');
+    Route::post('announcement', 'GMController@AnnouncementStore');
 
     Route::any('role/list', 'DataController@roleList');
     Route::any('wife/list', 'DataController@wifeList');
@@ -83,6 +85,7 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('resource/list', 'DataController@resourceList');
     Route::any('chat/list', 'DataController@chatList');
     Route::any('real/time/chat', 'DataController@RealTimeChat');
+    Route::any('order/list', 'DataController@OrderList');
 
     Route::post('ban/chat', 'GameController@banChat');
     Route::post('recharge', 'GameController@recharge');
@@ -92,6 +95,7 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::post('closure/ip', 'GameController@closureIp');
     Route::post('open/suit', 'GameController@openSuit');
     Route::post('close/suit', 'GameController@closeSuit');
+    Route::post('server/data', 'GameController@ServerData');
     Route::post('send/marquee', 'GameController@sendMarquee');
     Route::post('cancel/marquee', 'GameController@cancelMarquee');
     Route::post('chat/announcement', 'GameController@chatAnnouncement');

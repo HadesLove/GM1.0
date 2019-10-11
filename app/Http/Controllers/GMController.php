@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Libray\Response;
+use App\Models\Announcement;
 use App\Models\Ban;
 use App\Models\Broadcast;
 use App\Models\Code;
@@ -627,6 +628,12 @@ class GMController extends Controller
         return response(Response::Success($list));
     }
 
+    /**
+     * 新增礼包码
+     * @param Request $request
+     * @param CodeBatch $code_bacth
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function giftCodeStore(Request $request, CodeBatch $code_bacth)
     {
         $number = $request->input('number');
@@ -668,6 +675,12 @@ class GMController extends Controller
         }
     }
 
+    /**
+     * 礼包码列表
+     * @param Request $request
+     * @param Code $code
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function giftCodeList(Request $request, Code $code)
     {
         $batch_id = $request->input('batch_name');
@@ -709,6 +722,12 @@ class GMController extends Controller
         return response(Response::Success($list));
     }
 
+    /**
+     * 新增白名单
+     * @param Request $request
+     * @param WhiteIp $white_ip
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function whiteIpStore(Request $request, WhiteIp $white_ip)
     {
         $ip        = $request->input('ip');
@@ -727,6 +746,12 @@ class GMController extends Controller
         }
     }
 
+    /**
+     * 白名单列表
+     * @param Request $request
+     * @param WhiteIp $white_ip
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function whiteIpList(Request $request, WhiteIp $white_ip)
     {
         $ip  = $request->input('ip');
@@ -838,6 +863,62 @@ class GMController extends Controller
         }
 
     }
+
+    /**
+     * 聊天公告列表
+     * @param Request $request
+     * @param Announcement $announcement
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function AnnouncementList(Request $request, Announcement $announcement)
+    {
+        $account_id  = $request->input('account_id');
+
+        $orm = $announcement->with([
+            'account' => function($query){
+                $query->select('id', 'real_name');
+            },
+            'server' => function($query){
+                $query->select('id', 'server_name');
+            },
+        ]);
+
+        if ($account_id){
+            $orm->where(['account_id' => $account_id]);
+        }
+
+        $list = $orm->paginate(10);
+
+        return response(Response::Success($list));
+
+    }
+
+    /**
+     * 新增跑马灯
+     * @param Request $request
+     * @param Announcement $announcement
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function AnnouncementStore(Request $request, Announcement $announcement)
+    {
+        $comment  = $request->input('comment');
+        $server_id = $request->input('server_id');
+
+        $announcement->comment    = $comment;
+        $announcement->status     = 1;
+        $announcement->server_id  = $server_id;
+        $announcement->account_id = UID;
+
+        $result = $announcement->save();
+
+        if ($result) {
+            return response(Response::Success());
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+
+    }
+
 
     /**
      * 封停IP列表

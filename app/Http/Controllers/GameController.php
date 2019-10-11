@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
 use App\Models\Ban;
 use App\Models\Broadcast;
 use App\Models\IpOperation;
@@ -231,22 +232,30 @@ class GameController extends Controller
     /**
      * 聊天公告
      */
-    public function chatAnnouncement(Request $request)
+    public function chatAnnouncement(Request $request, Announcement $announcement)
     {
-        $serverId = $request->input('server_id');
-        $comment = $request->input('comment');
+        $id = $request->input('id');
+
+        $res = $announcement->where(['id' => $id])->first();
+
+        if (!$res){
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+
+        $comment = RequestTool::ChineseConversion($res->comment);
 
         $url_args = array(
-            "comment"      => $comment,
+            "comment"      => strtolower($comment),
         );
 
         $time      = time();
         $fun       = 'web_op_sys_chat';
         $mod       = 'chat_api';
 
-        $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
+        $result = $this->requestWX($url_args, $fun, $mod, $time, intval($res->server_id), $this->key);
 
         if ($result['res'] == "1") {
+            $announcement->where(['id' => $id])->update(['status' => 0]);
             return response(Response::Success());
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
@@ -346,6 +355,34 @@ class GameController extends Controller
         $mod       = 'global';
 
         $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
+
+        if ($result['res'] == "1") {
+            return response(Response::Success());
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+    }
+
+    /**
+     * 服务器实时数据
+     */
+    public function ServerData(Request $request)
+    {
+        $sid = array(1,2,3,4,10,11,12,13,15,1001,2001,2002,10001,11001,20001,20002);
+
+        $sid_list = json_encode($sid);
+
+        $url_args = array(
+            "work_time" => $sid_list,
+        );
+
+        $time      = time();
+        $fun       = 'web_op_sync_data';
+        $mod       = 'global';
+
+        $result = $this->requestWX($url_args, $fun, $mod, $time, $sid_list, $this->key);
+
+        return response(Response::Success($result));
 
         if ($result['res'] == "1") {
             return response(Response::Success());

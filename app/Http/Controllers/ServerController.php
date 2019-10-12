@@ -22,8 +22,9 @@ class ServerController extends Controller
     public function serverUpdate(Request $request, Server $server)
     {
         $id = $request->input('id');
+        $status = $request->input('status');
 
-        $result = $server->where(['id' => $id])->update(['status' => 1]);
+        $result = $server->where(['id' => $id])->update(['status' => $status]);
 
         if ($result) {
             return response(Response::Success());

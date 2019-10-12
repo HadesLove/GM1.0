@@ -249,7 +249,7 @@ class GMController extends Controller
                     $role = explode("|", $value['role_list']);
                     $role_name = '';
                     foreach ($role as $k => $v) {
-                        $roleName = DB::connection('wxfyl_s2006')
+                        $roleName = DB::connection('wxfyl_s2002')
                             ->table('user')
                             ->where(['uid' => $v])
                             ->select('uid', 'uname')
@@ -261,7 +261,6 @@ class GMController extends Controller
                     $value['role_name'] = '全区服';
                     $value['role_list'] = '全区服';
                 }
-
 
             }
         }

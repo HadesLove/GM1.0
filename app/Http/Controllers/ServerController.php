@@ -12,7 +12,7 @@ class ServerController extends Controller
 
     public function index(Request $request, Server $server)
     {
-        $orm = $server->select('id', 'server_name', 'logo', 'type', 'channel_id', 'note');
+        $orm = $server->select('id', 'server_name', 'logo', 'type', 'channel_id', 'note', 'status');
 
         $list = $orm->paginate(20);
 

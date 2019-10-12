@@ -25,6 +25,8 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('manager/list', 'ManagerController@managerList');
     Route::post('manager/{id}', 'ManagerController@save');
 
+    Route::post('server/{id}', 'ServerController@serverUpdate');
+
     Route::get('manager/getList', 'DedicineController@getManagerList');
     Route::get('channel/getList', 'DedicineController@getChannelList');
     Route::get('server/getList', 'DedicineController@getServerList');
@@ -71,6 +73,7 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 
     Route::post('white/ip', 'GMController@whiteIpStore');
     Route::any('white/ip/list', 'GMController@whiteIpList');
+    Route::post('white/ip/{id}', 'GMController@whiteIpUpdate');
     Route::any('broadcast/list', 'GMController@BroadcastList');
     Route::post('broadcast', 'GMController@BroadcastStore');
     Route::post('broadcast/{id}', 'GMController@BroadcastUpdate');

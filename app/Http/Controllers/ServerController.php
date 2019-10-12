@@ -57,4 +57,18 @@ class ServerController extends Controller
 
         return response(Response::Success());
     }
+
+    public function serverUpdate(Request $request, Server $server)
+    {
+        $id = $request->input('id');
+
+        $result = $server->where(['id' => $id])->update(['status' => 1]);
+
+        if ($result) {
+            return response(Response::Success());
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+    }
+
 }

@@ -109,7 +109,6 @@ class GMController extends Controller
             }
         }
 
-
         if (!empty($level[0]) && !empty($level[1])){
             if ($level[0] == $level[1]){
                 $orm = DB::connection('wxfyl')
@@ -254,7 +253,7 @@ class GMController extends Controller
                         ->where(['uid' => $v])
                         ->select('uid', 'uname')
                         ->first();
-                    $role_name .= $roleName->uname.'、';
+                    $role_name .= $roleName->uid.'、';
                 }
                 $value['role_name'] = substr($role_name,0,strrpos($role_name,"、"));
             }else{
@@ -735,6 +734,7 @@ class GMController extends Controller
 
         $white_ip->ip         = $ip;
         $white_ip->server_id  = $server_id;
+        $white_ip->status     = 1;
         $white_ip->account_id = UID;
 
         $result = $white_ip->save();
@@ -744,6 +744,26 @@ class GMController extends Controller
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
+    }
+
+    /**
+     * 删除白名单
+     * @param Request $request
+     * @param WhiteIp $white_ip
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function whiteIpUpdate(Request $request, WhiteIp $white_ip)
+    {
+        $id = $request->input('id');
+
+        $result = $white_ip->where(['id' => $id])->update(['status' => 0]);
+
+        if ($result) {
+            return response(Response::Success());
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+
     }
 
     /**
@@ -762,7 +782,7 @@ class GMController extends Controller
             }, 'server'=> function($query){
                 $query->select('id', 'server_name');
             },
-        ]);
+        ])->where(['status' => 1]);
 
         if ($ip){
             $orm->where(['ip' => $ip]);

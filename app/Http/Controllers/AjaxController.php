@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Libray\Response;
 use App\Models\Content;
+use App\Models\Server;
 use App\Models\WhiteIp;
 use Illuminate\Http\Request;
 
@@ -17,11 +18,15 @@ class AjaxController extends Controller
      * @param WhiteIp $white_ip
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function whiteIpCheck(Request $request, WhiteIp $white_ip)
+    public function whiteIpCheck(Request $request, WhiteIp $white_ip, Server $server)
     {
         $ip   = $request->input('ip');
         $sid  = $request->input('sid');
         $sign = $request->input('sign');
+
+        if ($server->where(['id' => $sid, 'status' => 0])->first()){
+            return response(Response::Error('正常登录', 20000));
+        }
 
         if ($sid < 1000){
             return response(Response::Error('内网测试账号可以正常登录', 20000));
@@ -31,7 +36,7 @@ class AjaxController extends Controller
             return response(Response::Error('不在白名单内禁止登录', 1));
         }
 
-        $result = $white_ip->where(['ip' => $ip, 'server_id' => $sid])->first();
+        $result = $white_ip->where(['ip' => $ip, 'server_id' => $sid, 'status' => 1])->first();
 
         if($result){
             return response(Response::Error('登录成功', 20001));

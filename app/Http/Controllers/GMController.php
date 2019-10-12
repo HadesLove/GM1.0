@@ -231,37 +231,39 @@ class GMController extends Controller
 
         $goods = Good::all()->keyBy('id')->toArray();
 
-        foreach ($list as $key => $value){
-            $attach = json_decode($value["attach_s"], true);
-            $goodsInfo    = array();
-            if ($attach) {
-                foreach ($attach as $k=>$val) {
-                    if (isset($goods[$k])) {
-                        $goodsInfo[] = $goods[$k]["good_name"] . "x" . $val;
+        if ($list) {
+            foreach ($list as $key => $value) {
+                $attach = json_decode($value["attach_s"], true);
+                $goodsInfo = array();
+                if ($attach) {
+                    foreach ($attach as $k => $val) {
+                        if (isset($goods[$k])) {
+                            $goodsInfo[] = $goods[$k]["good_name"] . "x" . $val;
+                        }
+
                     }
-
                 }
-            }
-            $value['attach'] = $goodsInfo ? implode(";", $goodsInfo) : "（无）";
+                $value['attach'] = $goodsInfo ? implode(";", $goodsInfo) : "（无）";
 
-            if ($value['role_list']){
-                $role = explode("|", $value['role_list']);
-                $role_name = '';
-                foreach($role as $k=>$v){
-                    $roleName = DB::connection('wxfyl_s2006')
-                        ->table('user')
-                        ->where(['uid' => $v])
-                        ->select('uid', 'uname')
-                        ->first();
-                    $role_name .= $roleName->uname.'、';
+                if ($value['role_list']) {
+                    $role = explode("|", $value['role_list']);
+                    $role_name = '';
+                    foreach ($role as $k => $v) {
+                        $roleName = DB::connection('wxfyl_s2006')
+                            ->table('user')
+                            ->where(['uid' => $v])
+                            ->select('uid', 'uname')
+                            ->first();
+                        $role_name .= $roleName->uname . '、';
+                    }
+                    $value['role_name'] = substr($role_name, 0, strrpos($role_name, "、"));
+                } else {
+                    $value['role_name'] = '全区服';
+                    $value['role_list'] = '全区服';
                 }
-                $value['role_name'] = substr($role_name,0,strrpos($role_name,"、"));
-            }else{
-               $value['role_name'] = '全区服';
-               $value['role_list'] = '全区服';
+
+
             }
-
-
         }
 
         return response(Response::Success($list));

@@ -248,12 +248,12 @@ class GMController extends Controller
                 $role = explode("|", $value['role_list']);
                 $role_name = '';
                 foreach($role as $k=>$v){
-                    $roleName = DB::connection('wxfyl')
+                    $roleName = DB::connection('wxfyl_s2006')
                         ->table('user')
                         ->where(['uid' => $v])
                         ->select('uid', 'uname')
                         ->first();
-                    $role_name .= $roleName->uid.'、';
+                    $role_name .= $roleName->uname.'、';
                 }
                 $value['role_name'] = substr($role_name,0,strrpos($role_name,"、"));
             }else{

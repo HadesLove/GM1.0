@@ -36,7 +36,7 @@ class ServerController extends Controller
         return $result;
     }
 
-    public function save(Request $request, Server $server)
+    /*public function save(Request $request, Server $server)
     {
         $id           = $request->input('id');
         $server_name  = $request->input('server_name');
@@ -55,7 +55,7 @@ class ServerController extends Controller
         }
 
         return response(Response::Success());
-    }
+    }*/
 
     public function serverUpdate(Request $request, Server $server)
     {

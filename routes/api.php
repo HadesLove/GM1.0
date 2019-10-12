@@ -104,6 +104,6 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::post('chat/announcement', 'GameController@chatAnnouncement');
 
     Route::any('server/list', 'ServerController@index');
-    Route::post('server/{id}', 'ServerController@save');
+    /*Route::post('server/{id}', 'ServerController@save');*/
 
 });

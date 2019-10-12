@@ -36,27 +36,26 @@ class ServerController extends Controller
         return $result;
     }
 
-    /*public function save(Request $request, Server $server)
+    public function save(Request $request, Server $server)
     {
         $id           = $request->input('id');
         $server_name  = $request->input('server_name');
         $logo         = $request->input('logo');
         $note         = $request->input('note');
 
-        $orm = $server->where(['id' => $id])->first();
-
-        $orm->server_name = $server_name;
-        $orm->logo        = $logo;
-        $orm->note        = $note;
-        $orm->updated_at  = date('Y-m-d H:i:s', time());
-        $result = $orm->save();
+        $server->id          = $id;
+        $server->server_name = $server_name;
+        $server->logo        = $logo;
+        $server->note        = $note;
+        $server->updated_at  = date('Y-m-d H:i:s', time());
+        $result = $server->save();
 
         if (!$result){
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
 
         return response(Response::Success());
-    }*/
+    }
 
     public function serverUpdate(Request $request, Server $server)
     {

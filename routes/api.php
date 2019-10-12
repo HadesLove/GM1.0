@@ -25,8 +25,6 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('manager/list', 'ManagerController@managerList');
     Route::post('manager/{id}', 'ManagerController@save');
 
-    Route::post('server/{id}', 'ServerController@serverUpdate');
-
     Route::get('manager/getList', 'DedicineController@getManagerList');
     Route::get('channel/getList', 'DedicineController@getChannelList');
     Route::get('server/getList', 'DedicineController@getServerList');
@@ -104,6 +102,6 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::post('chat/announcement', 'GameController@chatAnnouncement');
 
     Route::any('server/list', 'ServerController@index');
-    /*Route::post('server/{id}', 'ServerController@save');*/
+    Route::post('server/{id}', 'ServerController@serverUpdate');
 
 });

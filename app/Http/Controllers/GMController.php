@@ -340,17 +340,25 @@ class GMController extends Controller
         }
     }
 
-    public function loginNoticeStore(Request $request, Content $content)
+    /**
+     * 新增登录公告
+     * @param Request $request
+     * @param Content $content
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function loginBulletinStore(Request $request, Content $content)
     {
-        $details = $request->input('details');
-        $title   = $request->input('title');
+        $details   = $request->input('details');
+        $server_id = $request->input('server_id');
+        $title     = $request->input('title');
 
         if (!$details){
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
 
-        $content->content = $details;
-        $content->title   = $title;
+        $content->content   = $details;
+        $content->server_id = $server_id;
+        $content->title     = $title;
         $result = $content->save();
 
         if ($result){
@@ -359,11 +367,50 @@ class GMController extends Controller
         return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
     }
 
-    public function loginNoticeList(Request $request, Content $content)
+    /**
+     * 修改登录公告
+     * @param Request $request
+     * @param Content $content
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function loginBulletinUpdate(Request $request, Content $content)
+    {
+        $id        = $request->input('id');
+        $server_id = $request->input('server_id');
+        $details   = $request->input('details');
+        $title     = $request->input('title');
+
+
+        $result = $content
+            ->where(['id' => $id])
+            ->update([
+                'server_id'  => $server_id,
+                'content'    => $details,
+                'title'      => $title,
+                'updated_at' => date('Y-m-d H:i:s', time()),
+            ]);
+
+        if ($result){
+            return response(Response::Success());
+        }
+        return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+    }
+
+    /**
+     * 登录公告列表
+     * @param Request $request
+     * @param Content $content
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function loginBulletinList(Request $request, Content $content)
     {
         $title = $request->input('title');
 
-        $orm = $content->select('id', 'title', 'content', 'channel_id', 'status', 'note');
+        $orm = $content->with([
+            'server' => function($query){
+                $query->select('id', 'server_name');
+            }
+        ])->select('id', 'title', 'content', 'channel_id', 'status', 'note', 'created_at');
 
         if ($title){
             $orm->where(['title' => $title]);
@@ -374,17 +421,14 @@ class GMController extends Controller
         return response(Response::Success($list));
     }
 
-    public function getLoginNotice(Content $content)
-    {
-        $data = $content->where(['status' => 1])
-            ->select('content')
-            ->OrderBy('id DESC')
-            ->first();
-
-        return response(Response::Success($data));
-    }
-
-    public function giftDeployList(Request $request, CodeBox $codeBox, Good $good)
+    /**
+     * 礼包内容配置列表
+     * @param Request $request
+     * @param CodeBox $codeBox
+     * @param Good $good
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function GiftConfigurationList(Request $request, CodeBox $codeBox, Good $good)
     {
         $box_name = $request->input('box_name');
         $account_id = $request->input('account_id');
@@ -401,25 +445,32 @@ class GMController extends Controller
             $orm->where(['account_id' => $account_id]);
         }
 
-        $goodsList = $good->get();
+        $list = $orm->paginate(10);
+        if ($list['data']) {
 
-        $goods = $this->convert_arr_key($goodsList, 'id', 'good_name');
+            $goodsList = $good->get();
+            $goods = $this->convert_arr_key($goodsList, 'id', 'good_name');
 
-        $list = $orm->paginate(3);
-
-        foreach ($list as $key=>$value){
-            $itemList = json_decode($value['box_item_list'], true);
-            $items = '';
-            foreach ($itemList as $k=>$val){
-                $items .= $goods[$k] . ":" . $val . ";";
+            foreach ($list as $key => $value) {
+                $itemList = json_decode($value['box_item_list'], true);
+                $items = '';
+                foreach ($itemList as $k => $val) {
+                    $items .= $goods[$k] . ":" . $val . ";";
+                }
+                $value['box_item_content'] = $items;
             }
-            $value['box_item_content'] = $items;
         }
 
         return response(Response::Success($list));
     }
 
-    public function giftDeployStore(Request $request, CodeBox $code_box)
+    /**
+     * 新增礼包内容配置
+     * @param Request $request
+     * @param CodeBox $code_box
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function GiftConfigurationStore(Request $request, CodeBox $code_box)
     {
         $box_name = $request->input('box_name');
         $box_item = $request->input('box_item');
@@ -447,7 +498,13 @@ class GMController extends Controller
         return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
     }
 
-    public function giftDeployUpdate(Request $request, CodeBox $code_box)
+    /**
+     * 更新礼包内容配置
+     * @param Request $request
+     * @param CodeBox $code_box
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function GiftConfigurationUpdate(Request $request, CodeBox $code_box)
     {
         $id       = $request->input('id');
         $box_name = $request->input('box_name');

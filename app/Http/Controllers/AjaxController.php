@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Libray\Response;
+use App\Models\Code;
+use App\Models\CodeUse;
 use App\Models\Content;
 use App\Models\Server;
 use App\Models\WhiteIp;
@@ -45,51 +47,42 @@ class AjaxController extends Controller
         return response(Response::Error('不在白名单内禁止登录', 1));
     }
 
-    public function giftUseCheck(Request $request)
+    /**
+     * 礼包码验证接口
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function giftUseCheck(Request $request, CodeUse $code_use, Code $codeModel)
     {
         $roleId    = $request->input('roleId');
         $code      = $request->input('code');
         $channelId = $request->input('channelId');
+        $serverId  = $request->input('serverId');
         $sign      = $request->input('sign');
 
-        if (!$roleId || !$code || !$channelId || !$sign){
-
+        /*if (!$roleId || !$code || !$channelId || !$serverId || !$sign){
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 137001));
         }
 
-        if ($sign !== md5($roleId.$code.$channelId.$this->key)){
-
+        if ($sign !== md5($roleId.$code.$channelId.$serverId.$this->key)){
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 137002));
-        }
+        }*/
 
-        $map = array(
+        $res = $codeModel->with([
+            'codeBox', 'codeBatch'
+        ])->where(['code' => $code])->first();
 
-        );
-
-        $res = M()->table('lg_code a')->where($map)
-            ->join('lg_code_box b ON b.id = a.box_id')->join('lg_code_batch c ON c.id = a.batch_id')
-            ->field('a.id as code_id,a.batch_id,a.box_id,a.code,g.status,a.start_time,a.end_time,b.box_item_list, c.channel')
-            ->find();
+        return response(Response::Success($res));
 
         if (!$res){
-            $msg = array(
-                'code' => 0,
-                'err_code' => 137004
-            );
-
-            exit(json_encode($msg? $msg: array()));
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 137004));
         }
 
         if ($res['status']){
-            $msg = array(
-                'code' => 0,
-                'err_code' => 137005
-            );
-
-            exit(json_encode($msg? $msg: array()));
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 137005));
         }
 
-        $roleInfo = M('code_use', C('DB_PREFIX_API'))->where(['role_id' => $data['roleId'], 'code_box_id' => $res['box_id']])->find();
+        $roleInfo = $code_use->where(['rolde_id' => $roleId, 'code_box_id' => $res['box_id']])->first();
 
         if ($roleInfo){
             $msg = array(
@@ -132,7 +125,7 @@ class AjaxController extends Controller
     }
 
     /**
-     * 获取渠道登录公告
+     * 获取区服登录公告
      * @param Request $request
      * @param Content $content
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response

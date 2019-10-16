@@ -14,7 +14,7 @@
 Route::any('login', 'LoginController@index');
 
 Route::any('get/cast', 'AjaxController@getCast');
-Route::any('new/role/gift', 'AjaxController@newRolesGift');
+Route::any('new/role/gift', 'AjaxController@giftUseCheck');
 Route::any('white/ip/check', 'AjaxController@whiteIpCheck');
 Route::any('test', 'DataController@test');
 
@@ -53,13 +53,14 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::post('ban/chat', 'GMController@banChat');
     Route::post('ban/login', 'GMController@banLogin');
 
-    Route::any('login/notice/list', 'GMController@loginNoticeList');
-    Route::post('login/notice', 'GMController@loginNoticeStore');
-    Route::any('get/login/notice', 'GMController@getLoginNotice');
+    Route::any('login/notice/list', 'GMController@loginBulletinList');
+    Route::post('login/notice', 'GMController@loginBulletinStore');
+    Route::post('login/bulletin/{id}', 'GMController@loginBulletinUpdate');
 
-    Route::any('gift/deploy/list', 'GMController@giftDeployList');
-    Route::post('gift/deploy', 'GMController@giftDeployStore');
-    Route::post('gift/deploy/{id}', 'GMController@giftDeployUpdate');
+    Route::any('gift/deploy/list', 'GMController@GiftConfigurationList');
+    /*Route::any('gift/configuration/list', 'GMController@GiftConfigurationList');*/
+    Route::post('gift/deploy', 'GMController@GiftConfigurationStore');
+    Route::post('gift/deploy/{id}', 'GMController@GiftConfigurationUpdate');
 
 
     Route::post('gift/code/batch', 'GMController@codeBatchStore');

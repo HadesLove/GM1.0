@@ -446,12 +446,12 @@ class GMController extends Controller
         }
 
         $list = $orm->paginate(10);
-        if ($list['data']) {
 
-            $goodsList = $good->get();
-            $goods = $this->convert_arr_key($goodsList, 'id', 'good_name');
+        $goodsList = $good->get();
+        $goods = $this->convert_arr_key($goodsList, 'id', 'good_name');
 
-            foreach ($list as $key => $value) {
+        foreach ($list as $key => $value) {
+            if ($value['box_item_list']) {
                 $itemList = json_decode($value['box_item_list'], true);
                 $items = '';
                 foreach ($itemList as $k => $val) {

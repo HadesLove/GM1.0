@@ -29,7 +29,11 @@ class RequestTool
             if(preg_match('/^[\x7f-\xff]+$/', $chinese[$i])){
                 $strConversion .= urlencode($chinese[$i]);
             }else{
-                $strConversion .= $chinese[$i];
+                if ($chinese[$i] == '='){
+                    $strConversion .= urlencode($chinese[$i]);
+                }else{
+                    $strConversion .= $chinese[$i];
+                }
             }
         }
 

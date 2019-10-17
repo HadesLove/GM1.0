@@ -410,7 +410,7 @@ class GMController extends Controller
             'server' => function($query){
                 $query->select('id', 'server_name');
             }
-        ])->select('id', 'title', 'content', 'channel_id', 'status', 'note', 'created_at');
+        ])->select('id', 'server_id', 'title', 'content', 'channel_id', 'status', 'note', 'created_at');
 
         if ($title){
             $orm->where(['title' => $title]);
@@ -996,7 +996,6 @@ class GMController extends Controller
         }
 
     }
-
 
     /**
      * 封停IP列表

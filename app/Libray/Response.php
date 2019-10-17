@@ -53,6 +53,34 @@ class Response
         return $Res;
     }
 
+    static Public function RequestError($error_code){
+        $Res = [
+            "code" => 0,
+            "error_code"  => $error_code
+        ];
+
+        return $Res;
+    }
+
+    static Public function RequestMsgError($msg){
+        $Res = [
+            "code" => 0,
+            "msg"  => $msg
+        ];
+
+        return $Res;
+    }
+
+    static Public function RequestSuccess($error_code, $item){
+        $Res = [
+            "code"       => 1,
+            "error_code" => $error_code,
+            "item"       => $item
+        ];
+
+        return $Res;
+    }
+
     static Public function DeviceBindError($Msg,$Data=[]){
         $Res = [
             "Code" => self::DeviceBindErrorType,

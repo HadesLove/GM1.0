@@ -9,6 +9,7 @@ use App\Models\Content;
 use App\Models\Server;
 use App\Models\WhiteIp;
 use Illuminate\Http\Request;
+use DB;
 
 class AjaxController extends Controller
 {
@@ -50,77 +51,73 @@ class AjaxController extends Controller
     /**
      * 礼包码验证接口
      * @param Request $request
+     * @param CodeUse $code_use
+     * @param Code $codeModel
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws \Exception
      */
     public function giftUseCheck(Request $request, CodeUse $code_use, Code $codeModel)
     {
-        $roleId    = $request->input('roleId');
-        $code      = $request->input('code');
-        $channelId = $request->input('channelId');
-        $serverId  = $request->input('serverId');
-        $sign      = $request->input('sign');
+        $rid  = $request->input('roleId');
+        $code = $request->input('code');
+        //$cid  = $request->input('channelId');
+        $sid  = $request->input('serverId');
+        $sign = $request->input('sign');
 
-        /*if (!$roleId || !$code || !$channelId || !$serverId || !$sign){
-            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 137001));
+        if (!$rid || !$code  || !$sid || !$sign){
+            return response(Response::RequestError(137001));
         }
 
-        if ($sign !== md5($roleId.$code.$channelId.$serverId.$this->key)){
-            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 137002));
-        }*/
+        if ($sign !== md5($rid.$code.$sid.$this->key)){
+            return response(Response::RequestError(137002));
+        }
 
-        $res = $codeModel->with([
+        $res = $codeModel
+            ->with([
             'codeBox', 'codeBatch'
-        ])->where(['code' => $code])->first();
-
-        return response(Response::Success($res));
+            ])
+            ->where(['code' => $code, 'status' => 0])
+            ->first();
 
         if (!$res){
-            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 137004));
+            return response(Response::RequestError(137004));
         }
 
-        if ($res['status']){
-            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 137005));
+        if ($res->code_batch['server_id'] != 0){
+            if ($sid != $res->code_batch['server_id']){
+                return response(Response::RequestError(137005));
+            }
         }
 
-        $roleInfo = $code_use->where(['rolde_id' => $roleId, 'code_box_id' => $res['box_id']])->first();
+        $role = $code_use->where(['role_id' => $rid, 'code_box_id' => $res->code_box_id])->first();
 
-        if ($roleInfo){
-            $msg = array(
-                'code' => 0,
-                'err_code' => 137006
-            );
-
-            exit(json_encode($msg? $msg: array()));
+        if ($role){
+            return response(Response::RequestError(137006));
         }
 
-
-        $info = array(
-            'code_id'       => $res['code_id'],
-            'code'          => $data['code'],
-            'role_id'       => $data['roleId'],
-            'code_box_id'   => $res['box_id']
-        );
-
-        $result = M('code_use', C('DB_PREFIX_API'))->add($info);
-
-        $codeInfo = M('code', C('DB_PREFIX_API'))->where($map)->save(['status' => 1]);
-
-        if ($result && $codeInfo){
-            $msg = array(
-                'code' => 1,
-                'err_code' => 137007,
-                'item' => $res['box_item_list']
-            );
-
-            exit(json_encode($msg? $msg: array()));
+        if ($res->remain_count <= 0){
+            return response(Response::RequestError(137004));
         }
 
-        $msg = array(
-            'code' => 0,
-            'msg'  => '使用失败'
-        );
-
-        exit(json_encode($msg? $msg: array()));
+        DB::beginTransaction();
+        try{
+            $code_use->code_id     = $res->id;
+            $code_use->code        = $res->code;
+            $code_use->role_id     = $rid;
+            $code_use->code_box_id = $res->code_box_id;
+            $code_use->save();
+            $count = $res->remain_count - 1;
+            $status = 0;
+            if ($count == 0){
+                $status = 1;
+            }
+            $codeModel->where(['code' => $code])->update(['remain_count' => $count, 'status' => $status]);
+            DB::commit();
+            return response(Response::RequestSuccess(137007, $res->codeBox['box_item_list']));
+        }catch (\Exception $exception){
+            DB::rollBack();
+            return response(Response::RequestMsgError('使用失败'));
+        }
 
     }
 

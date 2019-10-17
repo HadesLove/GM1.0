@@ -431,6 +431,8 @@ class GameController extends Controller
     {
         $sign_args = json_encode($url_args);
 
+        dump($sign_args);
+
         $sign = md5("args={$sign_args}&fun={$fun}&mod={$mod}&sid={$serverId}&time={$time}&key={$key}");
 
         $sign_url = json_encode($url);
@@ -444,6 +446,8 @@ class GameController extends Controller
             'time'      => $time,
             'sign'      => $sign,
         );
+
+        dump($info);die;
 
         $res = RequestTool::send_post(env('WXURL'), $info);
 

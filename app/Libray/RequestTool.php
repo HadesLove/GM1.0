@@ -39,4 +39,23 @@ class RequestTool
 
         return $strConversion;
     }
+
+    static public function conversion($chinese)
+    {
+        $str = strlen($chinese);
+        $strConversion = '';
+        for ($i=0; $i < $str ; $i++) {
+            if(preg_match('/^[\x7f-\xff]+$/', $chinese[$i])){
+                $strConversion .= urlencode($chinese[$i]);
+            }else{
+                if ($chinese[$i] == '='){
+                    $strConversion .= urlencode($chinese[$i]);
+                }else{
+                    $strConversion .= $chinese[$i];
+                }
+            }
+        }
+
+        return $strConversion;
+    }
 }

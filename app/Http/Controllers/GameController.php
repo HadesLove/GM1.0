@@ -242,17 +242,19 @@ class GameController extends Controller
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
 
-        $comment = RequestTool::ChineseConversion($res->comment);
-
         $url_args = array(
-            "comment"      => strtolower($comment),
+            "comment"      => strtolower(RequestTool::ChineseConversion($res->comment)),
+        );
+
+        $url = array(
+            "comment"      => strtolower(RequestTool::conversion($res->comment)),
         );
 
         $time      = time();
         $fun       = 'web_op_sys_chat';
         $mod       = 'chat_api';
 
-        $result = $this->requestWX($url_args, $fun, $mod, $time, intval($res->server_id), $this->key);
+        $result = $this->requestWXs($url_args, $url, $fun, $mod, $time, intval($res->server_id), $this->key);
 
         if ($result['res'] == "1") {
             $announcement->where(['id' => $id])->update(['status' => 0]);
@@ -411,6 +413,31 @@ class GameController extends Controller
         //组装内容
         $info = array(
             'args'      => $sign_args,
+            'fun'       => $fun,
+            'mod'       => $mod,
+            'sid'       => $serverId,
+            'time'      => $time,
+            'sign'      => $sign,
+        );
+
+        $res = RequestTool::send_post(env('WXURL'), $info);
+
+        $result = json_decode($res, true);
+
+        return $result;
+    }
+
+    protected function requestWXs($url_args, $url, $fun, $mod, $time, $serverId, $key)
+    {
+        $sign_args = json_encode($url_args);
+
+        $sign = md5("args={$sign_args}&fun={$fun}&mod={$mod}&sid={$serverId}&time={$time}&key={$key}");
+
+        $sign_url = json_encode($url);
+
+        //组装内容
+        $info = array(
+            'args'      => $sign_url,
             'fun'       => $fun,
             'mod'       => $mod,
             'sid'       => $serverId,

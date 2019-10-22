@@ -157,7 +157,7 @@ class GameController extends Controller
      */
     public function openSuit(Request $request)
     {
-        $serverId = $request->input('server_id');
+        $serverId = $request->input('id');
 
         $url_args = array(
             "is_open" => 1,
@@ -181,7 +181,7 @@ class GameController extends Controller
      */
     public function closeSuit(Request $request)
     {
-        $serverId = $request->input('server_id');
+        $serverId = $request->input('id');
 
         $url_args = array(
             "is_open" => 0,

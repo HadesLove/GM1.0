@@ -144,6 +144,13 @@ class DataController extends Controller
      */
     public function wifeList(Request $request)
 	{
+	    $uid      = $request->input('uid');
+	    $channel  = $request->input('channel');
+	    $wife_id  = $request->input('wife_id');
+	    $intimacy = $request->input('intimacy');
+	    $wife_event_desc = $request->input('wife_event_desc');
+	    $time     = $request->input('time');
+
         $orm = DB::connection('wxfyl_l2002')
             ->table('lg_wife')
             ->select('id', 'uid', 'channel', 'wife_id', 'intimacy', 'child_count', 'wife_event_type', 'wife_event_desc', 'old_value', 'add_value', 'new_value', 'time');

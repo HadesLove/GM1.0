@@ -6,6 +6,7 @@ use App\Models\Announcement;
 use App\Models\Ban;
 use App\Models\Broadcast;
 use App\Models\IpOperation;
+use App\Models\Server;
 use Illuminate\Http\Request;
 use App\Libray\RequestTool;
 use App\Libray\Response;
@@ -155,7 +156,7 @@ class GameController extends Controller
     /**
      * 开服
      */
-    public function openSuit(Request $request)
+    public function openSuit(Request $request, Server $server)
     {
         $serverId = $request->input('id');
 
@@ -170,6 +171,7 @@ class GameController extends Controller
         $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
 
         if ($result['res'] == "1") {
+            $server->where(['id' => $serverId])->update(['server_status' => 1, 'updated_at' => date('Y-m-d H:i:s', time())]);
             return response(Response::Success());
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
@@ -179,7 +181,7 @@ class GameController extends Controller
     /**
      * 关服
      */
-    public function closeSuit(Request $request)
+    public function closeSuit(Request $request, Server $server)
     {
         $serverId = $request->input('id');
 
@@ -194,6 +196,7 @@ class GameController extends Controller
         $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
 
         if ($result['res'] == "1") {
+            $server->where(['id' => $serverId])->update(['server_status' => 0, 'updated_at' => date('Y-m-d H:i:s', time())]);
             return response(Response::Success());
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));

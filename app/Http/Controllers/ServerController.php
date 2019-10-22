@@ -24,7 +24,7 @@ class ServerController extends Controller
         $id = $request->input('id');
         $status = $request->input('status');
 
-        $result = $server->where(['id' => $id])->update(['status' => $status]);
+        $result = $server->where(['id' => $id])->update(['ip_status' => $status]);
 
         if ($result) {
             return response(Response::Success());

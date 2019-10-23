@@ -348,17 +348,19 @@ class GMController extends Controller
      */
     public function loginBulletinStore(Request $request, Content $content)
     {
-        $details   = $request->input('details');
-        $server_id = $request->input('server_id');
-        $title     = $request->input('title');
+        $details    = $request->input('details');
+        $server_id  = $request->input('server_id');
+        $channel_id = $request->input('channel_id');
+        $title      = $request->input('title');
 
         if (!$details){
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
 
-        $content->content   = $details;
-        $content->server_id = $server_id;
-        $content->title     = $title;
+        $content->content    = $details;
+        $content->server_id  = $server_id;
+        $content->channel_id = $channel_id;
+        $content->title      = $title;
         $result = $content->save();
 
         if ($result){
@@ -375,16 +377,18 @@ class GMController extends Controller
      */
     public function loginBulletinUpdate(Request $request, Content $content)
     {
-        $id        = $request->input('id');
-        $server_id = $request->input('server_id');
-        $details   = $request->input('details');
-        $title     = $request->input('title');
+        $id         = $request->input('id');
+        $server_id  = $request->input('server_id');
+        $channel_id = $request->input('channel_id');
+        $details    = $request->input('details');
+        $title      = $request->input('title');
 
 
         $result = $content
             ->where(['id' => $id])
             ->update([
                 'server_id'  => $server_id,
+                'channel_id' => $channel_id,
                 'content'    => $details,
                 'title'      => $title,
                 'updated_at' => date('Y-m-d H:i:s', time()),

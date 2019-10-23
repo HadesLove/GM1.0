@@ -135,12 +135,12 @@ class AjaxController extends Controller
             return response(Response::Error('必要参数缺失', 404));
         }
 
-        $reslut = $content
+        $result = $content
             ->where(['server_id' => $sid])
             ->select('content')
             ->orderBy('created_at', 'desc')
             ->first();
 
-        return response(Response::Success($reslut));
+        return response(Response::Success($result));
     }
 }

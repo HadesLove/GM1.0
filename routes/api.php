@@ -105,4 +105,9 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('server/list', 'ServerController@index');
     Route::post('server/{id}', 'ServerController@serverUpdate');
 
+
+    Route::any('channel/list', 'ChannelController@index');
+    Route::post('channel', 'ChannelController@store');
+    Route::post('channel/{id}', 'ChannelController@update');
+
 });

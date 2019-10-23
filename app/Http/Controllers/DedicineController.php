@@ -16,7 +16,7 @@ class DedicineController extends Controller
 {
     public function getChannelList(Channel $channel, Account $account)
     {
-        $channel_id = $account
+       /* $channel_id = $account
             ->where(['id' => UID])
             ->select('channel')
             ->first();
@@ -37,7 +37,15 @@ class DedicineController extends Controller
             $list = [];
         }
 
-        return response(Response::Success($list));
+        return response(Response::Success($list));*/
+
+       $list = $channel->select('id', 'channel_name', 'channel_abbr')->get();
+
+       foreach ($list as $key=>$value){
+           $list[$key]['channel_name'] = $value['channel_name'].$value['channel_abbr'];
+       }
+
+       return response(Response::Success($list));
     }
 
     public function getServerList(Server $server)

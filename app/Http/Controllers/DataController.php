@@ -392,7 +392,7 @@ class DataController extends Controller
 
         $list = $orm->paginate(20);
 
-	    $role = DB::connection('wxfyl_s2002')
+	    $role = DB::connection('wxfyl')
             ->table('user')
             ->select('uid', 'uname')
             ->get()->toArray();

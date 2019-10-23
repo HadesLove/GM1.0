@@ -413,6 +413,9 @@ class GMController extends Controller
         $orm = $content->with([
             'server' => function($query){
                 $query->select('id', 'server_name');
+            },
+            'channel' => function($query){
+                $query->select('id', 'channel_name', 'channel_abbr');
             }
         ])->select('id', 'server_id', 'title', 'content', 'channel_id', 'status', 'note', 'created_at');
 

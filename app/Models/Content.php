@@ -13,4 +13,9 @@ class Content extends Model
     {
         return $this->hasOne(Server::class, 'id', 'server_id');
     }
+
+    public function channel()
+    {
+        return $this->hasOne(Channel::class, 'id', 'channel_id');
+    }
 }

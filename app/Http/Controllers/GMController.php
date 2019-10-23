@@ -416,7 +416,7 @@ class GMController extends Controller
             $orm->where(['title' => $title]);
         }
 
-        $list = $orm->paginate(3);
+        $list = $orm->paginate(10);
 
         return response(Response::Success($list));
     }

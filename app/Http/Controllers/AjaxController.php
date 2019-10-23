@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Libray\Response;
+use App\Models\Channel;
 use App\Models\Code;
 use App\Models\CodeUse;
 use App\Models\Content;
@@ -127,16 +128,18 @@ class AjaxController extends Controller
      * @param Content $content
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function getCast(Request $request, Content $content)
+    public function getCast(Request $request, Content $content, Channel $channel)
     {
-        $sid = $request->input('sid');
+        $sdk_name = $request->input('sdk_name');
 
-        if (!$sid){
+        if (!$sdk_name){
             return response(Response::Error('必要参数缺失', 404));
         }
 
+        $name = $channel->where(['channel_abbr' => $sdk_name])->get();
+
         $result = $content
-            ->where(['server_id' => $sid])
+            ->whereIn('channel_id', $name)
             ->select('content')
             ->orderBy('created_at', 'desc')
             ->first();

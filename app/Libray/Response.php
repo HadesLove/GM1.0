@@ -83,7 +83,7 @@ class Response
 
     static Public function RequestMsgSuccess($Data = []){
         $Res = [
-            "code" => 2,
+            "Code" => 2,
             "Msg"  => '数据为空',
             "Data" => $Data
         ];

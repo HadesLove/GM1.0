@@ -138,7 +138,7 @@ class AjaxController extends Controller
         }
 
         $result = $content
-            ->where(['channel_id' => $c_id])
+            ->where('channel_id', '=', $c_id)
             ->select('content')
             ->orderBy('created_at', 'desc')
             ->first();

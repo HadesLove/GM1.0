@@ -81,6 +81,16 @@ class Response
         return $Res;
     }
 
+    static Public function RequestMsgSuccess($Data = []){
+        $Res = [
+            "code" => 2,
+            "Msg"  => '数据为空',
+            "Data" => $Data
+        ];
+
+        return $Res;
+    }
+
     static Public function DeviceBindError($Msg,$Data=[]){
         $Res = [
             "Code" => self::DeviceBindErrorType,

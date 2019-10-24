@@ -144,6 +144,12 @@ class AjaxController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
-        return response(Response::Success($result));
+        dump($result);
+
+        if ($result){
+            return response(Response::Success($result));
+        }else{
+            return response(Response::RequestMsgSuccess($result));
+        }
     }
 }

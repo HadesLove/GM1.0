@@ -128,23 +128,20 @@ class AjaxController extends Controller
      * @param Content $content
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function getCast(Request $request, Content $content, Channel $channel)
+    public function getCast(Request $request, Content $content)
     {
         $sdk_name = $request->input('sdk_name');
+        $c_id = $request->input('c_id');
 
-        if (!$sdk_name){
+        if (!$sdk_name || !$c_id){
             return response(Response::Error('必要参数缺失', 404));
         }
 
-        $name = $channel->where(['channel_abbr' => $sdk_name])->get();
-
         $result = $content
-            ->whereIn('channel_id', $name)
+            ->where(['channel_id' => $c_id])
             ->select('content')
             ->orderBy('created_at', 'desc')
             ->first();
-
-        dump($result);
 
         if ($result){
             return response(Response::Success($result));

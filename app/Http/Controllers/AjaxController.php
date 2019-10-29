@@ -61,7 +61,7 @@ class AjaxController extends Controller
     {
         $rid  = $request->input('roleId');
         $code = $request->input('code');
-        //$cid  = $request->input('channelId');
+        $cid  = $request->input('cid');
         $sid  = $request->input('serverId');
         $sign = $request->input('sign');
 
@@ -69,7 +69,7 @@ class AjaxController extends Controller
             return response(Response::RequestError(137001));
         }
 
-        if ($sign !== md5($rid.$code.$sid.$this->key)){
+        if ($sign !== md5($rid.$cid.$code.$sid.$this->key)){
             return response(Response::RequestError(137002));
         }
 
@@ -117,7 +117,7 @@ class AjaxController extends Controller
             return response(Response::RequestSuccess(137007, $res->codeBox['box_item_list']));
         }catch (\Exception $exception){
             DB::rollBack();
-            return response(Response::RequestMsgError('使用失败'));
+            return response(Response::RequestError(137001));
         }
 
     }

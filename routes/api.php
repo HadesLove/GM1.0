@@ -14,7 +14,7 @@
 Route::any('login', 'LoginController@index');
 
 Route::any('get/cast', 'AjaxController@getCast');
-Route::any('new/role/gift', 'AjaxController@giftUseCheck');
+Route::any('role/gift', 'AjaxController@giftUseCheck');
 Route::any('white/ip/check', 'AjaxController@whiteIpCheck');
 Route::any('test', 'DataController@test');
 

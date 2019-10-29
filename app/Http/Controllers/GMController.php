@@ -684,7 +684,7 @@ class GMController extends Controller
 
         foreach ($list as $value){
             if ($value['platform'] == '0'){
-                $value['platform'] = '全部平台';
+                $value['platform'] = '0';
             }
             $value['time'] = $value['start_time'].' 到 '.$value['end_time'];
         }

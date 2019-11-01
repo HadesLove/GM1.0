@@ -11,33 +11,21 @@ class ExcelController extends Controller
 {
     public function giftInfoExcel(Request $request, Code $code)
     {
-        $batch_id = $request->input('batch_name');
-        $box_id = $request->input('box_name');
-        $code_number = $request->input('code');
-        $status = $request->input('status');
+        $json_data = $request->input('data');
 
-        $orm = $code->with([
-            'codeBatch' => function($query){
-                $query->select('id', 'batch_name');
-            },
-            'codeBox' => function($query){
-                $query->select('id', 'box_name');
-            }
-        ]);
+        $data = json_decode($json_data, true);
 
-        if ($code_number){
-            $orm->where(['code' => $code_number]);
-        }
+        $batch_id = $data['batch_name'];
+        $box_id = $data['box_name'];
 
-        if ($status){
-            $orm->where(['status' => $status]);
-        }
 
-        if ($batch_id){
+        $orm = $code->select('code');
+
+        if (count($batch_id)){
             $orm->whereIn('code_batch_id', $batch_id);
         }
 
-        if ($box_id){
+        if (count($box_id)){
             $orm->whereIn('code_box_id', $box_id);
         }
 

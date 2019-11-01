@@ -32,8 +32,6 @@ class ExcelController extends Controller
 
         $list = $orm->get();
 
-        return Response::Success($list);
-
         $cellData = [
             ['礼包码'],
         ];

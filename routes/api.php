@@ -17,6 +17,7 @@ Route::any('get/cast', 'AjaxController@getCast');
 Route::any('role/gift', 'AjaxController@giftUseCheck');
 Route::any('white/ip/check', 'AjaxController@whiteIpCheck');
 Route::any('test', 'DataController@test');
+Route::post('gift/info/excel', 'Upload/ExcelController@giftInfoExcel');
 
 Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 
@@ -61,6 +62,8 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     /*Route::any('gift/configuration/list', 'GMController@GiftConfigurationList');*/
     Route::post('gift/deploy', 'GMController@GiftConfigurationStore');
     Route::post('gift/deploy/{id}', 'GMController@GiftConfigurationUpdate');
+
+    Route::post('gift/info/excel', 'Upload/ExcelController@giftInfoExcel');
 
 
     Route::post('gift/code/batch', 'GMController@codeBatchStore');

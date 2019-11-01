@@ -48,7 +48,7 @@ class ExcelController extends Controller
         ];
 
         foreach ($list as $key=>$value) {
-            $cellData[] = $value['code'];
+            $cellData[] = array($value['code']);
         }
 
         Excel::create('礼包码',function($excel) use ($cellData){

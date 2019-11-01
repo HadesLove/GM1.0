@@ -17,7 +17,7 @@ Route::any('get/cast', 'AjaxController@getCast');
 Route::any('role/gift', 'AjaxController@giftUseCheck');
 Route::any('white/ip/check', 'AjaxController@whiteIpCheck');
 Route::any('test', 'DataController@test');
-Route::post('gift/info/excel', 'Upload/ExcelController@giftInfoExcel');
+Route::post('gift/info/excel', 'Upload\ExcelController@giftInfoExcel');
 
 Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 

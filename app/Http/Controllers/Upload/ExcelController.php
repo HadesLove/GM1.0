@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Upload;
 
 use App\Http\Controllers\Controller;
+use App\Libray\Response;
 use App\Models\Code;
 use Excel;
 use Illuminate\Http\Request;
@@ -30,6 +31,8 @@ class ExcelController extends Controller
         }
 
         $list = $orm->get();
+
+        return Response::Success($list);
 
         $cellData = [
             ['礼包码'],

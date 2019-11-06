@@ -6,6 +6,7 @@ use App\Models\Announcement;
 use App\Models\Ban;
 use App\Models\Broadcast;
 use App\Models\IpOperation;
+use App\Models\NewRole;
 use App\Models\Server;
 use Illuminate\Http\Request;
 use App\Libray\RequestTool;
@@ -14,6 +15,7 @@ use App\Libray\Response;
 class GameController extends Controller
 {
     private $key = 'rJYgMdja4KXMqwFbAibOM7jhls';
+    private $ajax_key = '51Game@123.com&%#';
 
     /**
      * 禁言解禁
@@ -397,6 +399,45 @@ class GameController extends Controller
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }
+    }
+
+    /**
+     * 创角邮件接口
+     * @param Request $request
+     * @param NewRole $newRoleModel
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function giftRoleGift(Request $request, NewRole $newRoleModel)
+    {
+        $rid  = $request->input('rid');
+        $sid  = $request->input('sid');
+        $sign = $request->input('sign');
+
+        if (!$rid || !$sid || !$sign){
+            return response(Response::RequestError(137001));
+        }
+
+        if ($sign !== md5($rid.$sid.$this->ajax_key)){
+            return response(Response::RequestError(137002));
+        }
+
+        $newRole = $newRoleModel->where(['status' => 1])->orderBy('id', 'DESC')->first();
+
+        $serverId = intval($sid);
+
+        $url_args = array(
+            "objects"     => [$rid],
+            "title"       => strtolower(RequestTool::ChineseConversion($newRole->title)),
+            "content"     => strtolower(RequestTool::ChineseConversion($newRole->content)),
+            "items"       => json_encode($newRole->attach_s),
+        );
+
+        $time      = time();
+        $fun       = 'web_op_sys_mail';
+        $mod       = 'mail_api';
+
+        $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
+
     }
 
     /**

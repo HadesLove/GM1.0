@@ -122,6 +122,7 @@ class AjaxController extends Controller
 
     }
 
+
     /**
      * 获取区服登录公告
      * @param Request $request

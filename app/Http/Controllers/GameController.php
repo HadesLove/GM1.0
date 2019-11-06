@@ -345,11 +345,13 @@ class GameController extends Controller
     /**
      * 定时开服
      */
-    public function timeTack(Request $request)
+    public function timeTack(Request $request, Server $server)
     {
-        $work_time = $request->input('work_time');
+        $activity_at = $request->input('work_time');
 
         $serverId = intval($request->input('server_id'));
+
+        $work_time = strtotime($activity_at);
 
         $url_args = array(
             "work_time" => $work_time,
@@ -362,6 +364,7 @@ class GameController extends Controller
         $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
 
         if ($result['res'] == "1") {
+            $server->where(['id' => $serverId])->update(['activity_at' => $activity_at, 'updated_at' => date('Y-m-d H:i:s', time())]);
             return response(Response::Success());
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));

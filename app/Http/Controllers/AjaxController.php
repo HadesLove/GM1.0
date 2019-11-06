@@ -28,9 +28,9 @@ class AjaxController extends Controller
         $sid  = $request->input('sid');
         $sign = $request->input('sign');
 
-        if ($server->where(['id' => $sid, 'ip_status' => 0])->first()){
+        /*if ($server->where(['id' => $sid, 'ip_status' => 0])->first()){
             return response(Response::Error('正常登录', 20000));
-        }
+        }*/
 
         if ($sid < 1000){
             return response(Response::Error('内网测试账号可以正常登录', 20000));

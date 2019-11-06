@@ -28,7 +28,7 @@ class AjaxController extends Controller
         $sid  = $request->input('sid');
         $sign = $request->input('sign');
 
-        if ($server->where(['id' => $sid, 'status' => 0])->first()){
+        if ($server->where(['id' => $sid, 'server_status' => 0])->first()){
             return response(Response::Error('正常登录', 20000));
         }
 

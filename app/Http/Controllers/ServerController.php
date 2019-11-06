@@ -19,10 +19,10 @@ class ServerController extends Controller
         return response(Response::Success($list));
     }
 
-    public function serverUpdate(Request $request, Server $server)
+    public function update(Request $request, Server $server)
     {
         $id = $request->input('id');
-        $status = $request->input('status');
+        $status = $request->input('ip_status');
 
         $result = $server->where(['id' => $id])->update(['ip_status' => $status]);
 

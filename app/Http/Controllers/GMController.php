@@ -254,7 +254,10 @@ class GMController extends Controller
                             ->where(['uid' => $v])
                             ->select('uid', 'uname')
                             ->first();
-                        $role_name .= $roleName->uname . '、';
+
+                        if ($roleName) {
+                            $role_name .= $roleName->uname . '、';
+                        }
                     }
                     $value['role_name'] = substr($role_name, 0, strrpos($role_name, "、"));
                 } else {

@@ -167,7 +167,7 @@ class DataController extends Controller
         foreach ($list as $key=>$value) {
             $value->time        = date('Y-m-d H:i:s', $value->time);
 
-            if ($nameCount[$value->uid]){
+            if (isset($nameCount[$value->uid])){
                 $value->role_name = $nameCount[$value->uid]->uname;
             }else{
                 $value->role_name = '-';
@@ -200,7 +200,7 @@ class DataController extends Controller
         foreach ($list as $key=>$value) {
             $value->time        = date('Y-m-d H:i:s', $value->time);
 
-            if ($nameCount[$value->uid]){
+            if (isset($nameCount[$value->uid])){
                 $value->role_name = $nameCount[$value->uid]->uname;
             }else{
                 $value->role_name = '-';
@@ -263,7 +263,7 @@ class DataController extends Controller
             $value->loginOutTime = date('Y-m-d H:i:s', $value->loginOutTime);
             $value->createTime   = date('Y-m-d H:i:s', $value->createTime);
 
-            if ($nameCount[$value->roleId]){
+            if (isset($nameCount[$value->roleId])){
                 $value->role_name = $nameCount[$value->roleId]->uname;
             }else{
                 $value->role_name = '-';
@@ -356,8 +356,6 @@ class DataController extends Controller
 
         foreach ($list as $key=>$value) {
             $value->chatTime   = date('Y-m-d H:i:s', $value->chatTime);
-
-            dump(isset($nameCount[$value->uid]));die;
 
             if (isset($nameCount[$value->uid])){
                 $value->role_name = $nameCount[$value->uid]->uname;

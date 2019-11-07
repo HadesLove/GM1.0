@@ -426,140 +426,35 @@ class GameController extends Controller
         $serverId = intval($sid);
 
         $url_args = array(
-            "objects"     => $rid,
+            "objects"     => array(intval($rid)),
             "title"       => strtolower(RequestTool::ChineseConversion($newRole->title)),
             "content"     => strtolower(RequestTool::ChineseConversion($newRole->content)),
-            "items"       => json_encode($newRole->attach_s),
+            "items"       => $newRole->attach_s,
         );
-
-        dump($url_args);
 
         $time      = time();
         $fun       = 'web_op_sys_mail';
         $mod       = 'mail_api';
 
-        $res = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
-
-        dump($res);
+        $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
 
     }
 
-    public function sendMail(Request $request)
-    {
-        $server    = $request->input('server');
-        $title     = $request->input('title');
-        $role_list = $request->input('role', null);
-        $item_id   = $request->input('item_id');
-        $content   = $request->input('content');
-        $channel   = $request->input('channel', null);
-        $level     = $request->input('level', null);
+    protected function send_post($url, $params) {
 
-        $serverId = intval($server);
-
-        $item = array();
-        foreach ($item_id as $item_key => $item_value){
-            $item_val = json_decode($item_value, true);
-            if (!empty($item_val)){
-                $item[$item_val['selectVal']] = intval($item_val['num']);
-            }
-        }
-
-        if (!empty($level[0]) && !empty($level[1])){
-            if ($level[0] == $level[1]){
-                $orm = DB::connection('wxfyl')
-                    ->table('user')
-                    ->where(['renown_lv' => $level[0]])
-                    ->select('uid', 'renown_lv')
-                    ->get();
-            }else{
-                $orm = DB::connection('wxfyl')
-                    ->table('user')
-                    ->whereBetween('renown_lv', [$level[0], $level[1]])
-                    ->select('uid', 'renown_lv')
-                    ->get();
-            }
-            $roleInt = array();
-            foreach ($orm as $orm_val){
-                array_push($roleInt, intval($orm_val->uid));
-            }
-        }else{
-            if (empty($role_list)) {
-                $role = array();
-            } else {
-                $role = explode("|", $role_list);
-            }
-
-            $roleInt = array();
-            foreach ($role as $role_val){
-                array_push($roleInt, intval($role_val));
-            }
-        }
-
-        $str_long_title = strlen($title);
-        $titles = '';
-        for ($i=0; $i < $str_long_title ; $i++) {
-            if(preg_match('/^[\x7f-\xff]+$/', $title[$i])){
-                $titles .= urlencode($title[$i]);
-            }else{
-                $titles .= $title[$i];
-            }
-        }
-
-        $str_long_content = strlen($content);
-        $contents = '';
-        for ($i=0; $i < $str_long_content ; $i++) {
-            if(preg_match('/^[\x7f-\xff]+$/', $content[$i])){
-                $contents .= urlencode($content[$i]);
-            }else{
-                $contents .= $content[$i];
-            }
-        }
-
-        $url_args = array(
-            "objects"     => $channel ? intval($channel) : $roleInt,
-            "title"       => strtolower($title),
-            "content"     => strtolower($contents),
-            "items"       => json_encode($item),
+        $post_data = http_build_query($params);
+        $options = array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => 'Content-type:application/x-www-form-urlencoded',
+                'content' => $post_data,
+                'timeout' => 15 * 60 // 超时时间（单位:s）
+            )
         );
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
 
-        $time = time();
-        $sign_args = json_encode($url_args);
-        $sign = md5("args={$sign_args}&fun=web_op_sys_mail&mod=mail_api&sid={$serverId}&time={$time}&key={$this->key}");
-
-        //组装内容
-        $info = array(
-            'args'      => $sign_args,
-            'fun'       => 'web_op_sys_mail',
-            'mod'       => 'mail_api',
-            'sid'       => $serverId,
-            'time'      => $time,
-            'sign'      => $sign,
-        );
-
-        //发送内容
-        $res = $this->send_post(env('WXURL'), $info);
-
-        $result = Gmmail::create([
-            'role_list'  => $role_list,
-            'server_id'  => $serverId,
-            'channel_id' => $channel,
-            'account_id' => UID,
-            'title'      => $title,
-            'content'    => $content,
-            'attach_s'   => json_encode($item),
-        ]);
-
-        $res = json_decode($res, true);
-
-        if ($res['res'] == "1") {
-            if ($result){
-                return response(Response::Success());
-            }
-            return response(Response::Error(trans('ResponseMsg.SPECIFIED_QUESTIONED_USER_NOT_EXIST'), 30001));
-
-        } else {
-            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
-        }
+        return $result;
     }
 
     /**

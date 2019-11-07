@@ -404,7 +404,7 @@ class DataController extends Controller
             $value->time   = date('Y-m-d H:i:s', $value->time);
             $value->server_name = $server[$value->sid]['server_name'];
 
-            if ($nameCount[$value->uid]){
+            if (isset($nameCount[$value->uid])){
                 $value->role_name = $nameCount[$value->uid]->uname;
             }else{
                 $value->role_name = '-';

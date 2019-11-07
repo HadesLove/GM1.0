@@ -297,7 +297,7 @@ class DataController extends Controller
         foreach ($list as $key=>$value) {
             $value->chatTime   = date('Y-m-d H:i:s', $value->chatTime);
 
-            if ($nameCount[$value->uid]){
+            if (isset($nameCount[$value->uid])){
                 $value->role_name = $nameCount[$value->uid]->uname;
             }else{
                 $value->role_name = '-';
@@ -356,6 +356,8 @@ class DataController extends Controller
 
         foreach ($list as $key=>$value) {
             $value->chatTime   = date('Y-m-d H:i:s', $value->chatTime);
+
+            dump(isset($nameCount[$value->uid]));die;
 
             if (isset($nameCount[$value->uid])){
                 $value->role_name = $nameCount[$value->uid]->uname;

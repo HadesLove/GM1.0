@@ -7,6 +7,7 @@ use App\Models\Channel;
 use App\Models\Code;
 use App\Models\CodeUse;
 use App\Models\Content;
+use App\Models\Idfa;
 use App\Models\Server;
 use App\Models\WhiteIp;
 use Illuminate\Http\Request;
@@ -150,4 +151,48 @@ class AjaxController extends Controller
             return response(Response::RequestMsgSuccess($result));
         }
     }
+
+
+    /**
+     * 积分墙的排重接口
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function ExcludeRepeat(Request $request)
+    {
+        $idfa = $request->input('idfa');
+        $apple_id = $request->input('apple_id');
+
+        $result = Idfa::where(['apple_id' => $apple_id, 'idfa' => $idfa])->first();
+
+        if ($result) {
+            return response(Response::Error('该游戏设备已存在', 0));
+        } else {
+            return response(Response::Success('该游戏设备不存在'));
+        }
+    }
+
+    /**
+     * 积分墙的激活接口
+     * @param Request $request
+     * @param Idfa $idfaModel
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function DeviceActivation(Request $request, Idfa $idfaModel)
+    {
+        $idfa = $request->input('idfa');
+        $apple_id = $request->input('apple_id');
+
+        $idfaModel->idfa = $idfa;
+        $idfaModel->apple_id = $apple_id;
+        $result = $idfaModel->save();
+
+        if ($result) {
+            return response(Response::Success('激活成功'));
+        } else {
+            return response(Response::Error('激活失败', 0));
+        }
+
+    }
+
 }

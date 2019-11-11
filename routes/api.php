@@ -17,8 +17,9 @@ Route::any('get/cast', 'AjaxController@getCast');
 Route::any('role/gift', 'AjaxController@giftUseCheck');
 Route::any('new/role', 'GameController@giftRoleGift');
 Route::any('white/ip/check', 'AjaxController@whiteIpCheck');
-Route::any('test', 'DataController@test');
 Route::any('gift/info/excel', 'Upload\ExcelController@giftInfoExcel');
+Route::any('exclude/repeat', 'AjaxController@ExcludeRepeat');
+Route::any('device/activation', 'AjaxController@DeviceActivation');
 
 Route::post('time/tack1', 'GameController@timeTack');
 

@@ -160,8 +160,17 @@ class AjaxController extends Controller
      */
     public function ExcludeRepeat(Request $request)
     {
-        $idfa = $request->input('idfa');
+        $idfa     = $request->input('idfa');
         $apple_id = $request->input('apple_id');
+        $sign     = $request->input('sign');
+
+        if ($idfa || $apple_id || $sign) {
+            return response(Response::Error('参数缺失', 0));
+        }
+
+        if ($sign != md5($idfa.$apple_id.$this->key)) {
+            return response(Response::Error('签名失败', 0));
+        }
 
         $result = Idfa::where(['apple_id' => $apple_id, 'idfa' => $idfa])->first();
 
@@ -180,8 +189,17 @@ class AjaxController extends Controller
      */
     public function DeviceActivation(Request $request, Idfa $idfaModel)
     {
-        $idfa = $request->input('idfa');
+        $idfa     = $request->input('idfa');
         $apple_id = $request->input('apple_id');
+        $sign     = $request->input('sign');
+
+        if ($idfa || $apple_id || $sign) {
+            return response(Response::Error('参数缺失', 0));
+        }
+
+        if ($sign != md5($idfa.$apple_id.$this->key)) {
+            return response(Response::Error('签名失败', 0));
+        }
 
         $idfaModel->idfa = $idfa;
         $idfaModel->apple_id = $apple_id;

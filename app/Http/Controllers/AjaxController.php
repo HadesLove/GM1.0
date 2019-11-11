@@ -168,7 +168,7 @@ class AjaxController extends Controller
             return response(Response::Error('参数缺失', 0));
         }
 
-        if ($sign != md5($idfa.$apple_id.$this->key)) {
+        if ($sign != md5($apple_id.$idfa.$this->key)) {
             return response(Response::Error('签名失败', 0));
         }
 
@@ -197,7 +197,7 @@ class AjaxController extends Controller
             return response(Response::Error('参数缺失', 0));
         }
 
-        if ($sign != md5($idfa.$apple_id.$this->key)) {
+        if ($sign != md5($apple_id.$idfa.$this->key)) {
             return response(Response::Error('签名失败', 0));
         }
 

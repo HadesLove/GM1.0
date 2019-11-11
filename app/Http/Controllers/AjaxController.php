@@ -164,7 +164,7 @@ class AjaxController extends Controller
         $apple_id = $request->input('apple_id');
         $sign     = $request->input('sign');
 
-        if ($idfa || $apple_id || $sign) {
+        if (!$idfa || !$apple_id || !$sign) {
             return response(Response::Error('参数缺失', 0));
         }
 
@@ -193,7 +193,7 @@ class AjaxController extends Controller
         $apple_id = $request->input('apple_id');
         $sign     = $request->input('sign');
 
-        if ($idfa || $apple_id || $sign) {
+        if (!$idfa || !$apple_id || !$sign) {
             return response(Response::Error('参数缺失', 0));
         }
 

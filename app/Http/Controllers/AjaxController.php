@@ -161,7 +161,7 @@ class AjaxController extends Controller
     public function ExcludeRepeat(Request $request)
     {
         $idfa     = $request->input('idfa');
-        $apple_id = $request->input('apple');
+        $apple_id = $request->input('appid');
         $sign     = $request->input('sign');
 
         if (!$idfa || !$apple_id || !$sign) {
@@ -190,7 +190,7 @@ class AjaxController extends Controller
     public function DeviceActivation(Request $request, Idfa $idfaModel)
     {
         $idfa     = $request->input('idfa');
-        $apple_id = $request->input('apple');
+        $apple_id = $request->input('appid');
         $sign     = $request->input('sign');
 
         if (!$idfa || !$apple_id || !$sign) {

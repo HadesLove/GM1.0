@@ -213,4 +213,30 @@ class AjaxController extends Controller
 
     }
 
+    public function checkActivation(Request $request, Idfa $idfaModel)
+    {
+        $idfa     = $request->input('idfa');
+        $apple_id = $request->input('appid');
+
+        if (!$idfa || !$apple_id) {
+            return response(Response::Error('参数缺失', 0));
+        }
+
+        $idfas = explode(',',$idfa);
+
+        $data = array();
+
+        foreach ($idfas as $value) {
+            $result = $idfaModel->where(['apple_id' => $apple_id, 'idfa' => $value])->first();
+
+            if ($result) {
+                $data[$value] = 1;
+            } else {
+                $data[$value] = 0;
+            }
+        }
+
+        return response(Response::Success($data));
+    }
+
 }

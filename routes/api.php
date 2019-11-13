@@ -21,6 +21,7 @@ Route::any('gift/info/excel', 'Upload\ExcelController@giftInfoExcel');
 Route::any('exclude/repeat', 'AjaxController@ExcludeRepeat');
 Route::any('device/activation', 'AjaxController@DeviceActivation');
 Route::any('check/activation', 'AjaxController@checkActivation');
+Route::any('callback', 'AjaxController@callback');
 
 Route::post('time/tack1', 'GameController@timeTack');
 

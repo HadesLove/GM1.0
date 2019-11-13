@@ -205,8 +205,12 @@ class AjaxController extends Controller
         $idfaModel->apple_id = $apple_id;
         $result = $idfaModel->save();
 
+        $data = array(
+            'callback' => urlencode("http://106.75.176.152:8081/api/callback?idfa=".$idfa.'&appid='.$apple_id.'&sign='.$sign)
+        );
+
         if ($result) {
-            return response(Response::Success('激活成功'));
+            return response(Response::Success($data));
         } else {
             return response(Response::Error('激活失败', 0));
         }
@@ -217,6 +221,7 @@ class AjaxController extends Controller
     {
         $idfa     = $request->input('idfa');
         $apple_id = $request->input('appid');
+
 
         if (!$idfa || !$apple_id) {
             return response(Response::Error('参数缺失', 0));
@@ -237,6 +242,29 @@ class AjaxController extends Controller
         }
 
         return response(Response::Success($data));
+    }
+
+    public function callback(Request $request, Idfa $idfaModel)
+    {
+        $idfa     = $request->input('idfa');
+        $apple_id = $request->input('appid');
+        $sign     = $request->input('sign');
+
+        if (!$idfa || !$apple_id || !$sign) {
+            return response(Response::ErrorCallback('参数缺失', 0));
+        }
+
+        if ($sign != md5($apple_id.$idfa.$this->key)) {
+            return response(Response::ErrorCallback('签名失败', 0));
+        }
+
+        $result = $idfaModel->where(['apple_id' => $apple_id, 'idfa' => $idfa])->first();
+
+        if ($result) {
+            return response(Response::SuccessCallback());
+        } else {
+            return response(Response::ErrorCallback('激活失败', 0));
+        }
     }
 
 }

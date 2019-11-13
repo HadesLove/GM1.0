@@ -44,10 +44,30 @@ class Response
         return $Res;
     }
 
+    static public function SuccessCallback(){
+        $Res = [
+            "Code"    => self::SUCCESS,
+            "Success" => true,
+            "errno"   => 0,
+            "Msg"     => '回调成功',
+        ];
+        return $Res;
+    }
+
     static Public function Error($msg, $code){
         $Res = [
             "Code" => $code,
             "Msg"  => $msg
+        ];
+
+        return $Res;
+    }
+
+    static Public function ErrorCallback($msg, $code){
+        $Res = [
+            "Code"  => $code,
+            "erron" => 1,
+            "Msg"   => $msg
         ];
 
         return $Res;

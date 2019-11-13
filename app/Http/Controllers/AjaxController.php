@@ -206,7 +206,7 @@ class AjaxController extends Controller
         $result = $idfaModel->save();
 
         $data = array(
-            'callback' => urlencode("http://106.75.176.152:8081/api/callback?idfa=".$idfa.'&appid='.$apple_id.'&sign='.$sign)
+            'callback' => urlencode("http://106.75.176.152:8081/api/callback")
         );
 
         if ($result) {
@@ -261,6 +261,9 @@ class AjaxController extends Controller
         $result = $idfaModel->where(['apple_id' => $apple_id, 'idfa' => $idfa])->first();
 
         if ($result) {
+            if (!$result->count){
+                return response(Response::ErrorCallback('重复激活', 0));
+            }
             return response(Response::SuccessCallback());
         } else {
             return response(Response::ErrorCallback('激活失败', 0));

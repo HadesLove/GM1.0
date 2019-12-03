@@ -13,25 +13,32 @@ openssl rsa -in rsa_private_key.pem -pubout -out rsa_public_key.pem
  * Date: 2017/12/28
  * Time: 9:50
  */
-
 namespace App\Libray;
 
-/**
- * RSA算法类
- * 签名及密文编码：base64字符串/十六进制字符串/二进制字符串流
- * 填充方式: PKCS1Padding（加解密）/NOPadding（解密）
- *
- * Notice:Only accepts a single block. Block size is equal to the RSA key size!
- * 如密钥长度为1024 bit，则加密时数据需小于128字节，加上PKCS1Padding本身的11字节信息，所以明文需小于117字节
- *
- * @author: ZHIHUA_WEI
- * @version: 1.0.0
- * @date: 2017/06/30
- */
-class RsaService
+class RSA
 {
-    private $pubKey = null;
-    private $priKey = null;
+    private $pubKey = '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQChNeAYA71WgAE0BCYRa5WGNNj+
+K8P3+13+CyD5EMi0MPoN6TVpH3aE/0nMKWu4qwFnYTDNYH/ZakC/3LtxnWyigoYS
+4uXoZf720QxMYOG9C1DorsxeJrl1WXtYuOwHZrDjVIC34yMZ86zH9u8G9WqPEykt
+syzbI7g+RQTl/EWTPQIDAQAB
+-----END PUBLIC KEY-----';
+    private $priKey = '-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQChNeAYA71WgAE0BCYRa5WGNNj+K8P3+13+CyD5EMi0MPoN6TVp
+H3aE/0nMKWu4qwFnYTDNYH/ZakC/3LtxnWyigoYS4uXoZf720QxMYOG9C1Dorsxe
+Jrl1WXtYuOwHZrDjVIC34yMZ86zH9u8G9WqPEyktsyzbI7g+RQTl/EWTPQIDAQAB
+AoGAbfyc5KWAg0iYCY4fDtmQzVy3A0qGzGTCbvXWzDcIR+/2WpFWsF8X9ItcJR/J
+b9e0AH1N14FUGNimToBhnpViLLQumaWLllxi5Di76kNCg7ivo2Ml1neK282ZCZ9v
+JOaiAnPEoOWed9Gjx5qWrfF7B5RXyBBtvkHXe1zcIHddwIECQQDW3hN+KzpoRbml
+Bs0WBeFMMvahZY7821vOD/A8T8Dk5XMYttmt8jrOa+pdr987Zmr5RTcwVQ8iftrj
+4Cd0BmXhAkEAwBJAK3w7s2OkA4lOuQoux+urmjvajg9vAU559rY1pxcpgNBFWvEv
+e9jA46trZmWU0h1f/TCycXdr+iEW73Og3QJAbxqmObdgnEpxlEPQCHNB7ITtwsch
+CN7kucjEEGus8q8ytLTYGnoGrnZe2dL3O1/aMMr5nqRdDxlJVkuyGuy0AQJBAL6q
+32zLnPBNv6mLCs0B4MKxnt4zAJj5lTZ00vook0ZV5etr1Q2cU4jb+U+JAcramEuk
+wX80ck/VPylE4+G8pTkCQHu55wyptTjEIxSmiFS31osR0/+CNpf62F5uzgjAMWOi
+udTG2A2mPIiELeLAE7AcTAp4vCnMct7QhHUO3Mxvulg=
+-----END RSA PRIVATE KEY-----
+';
 
     /**
      * 构造函数
@@ -146,7 +153,7 @@ class RsaService
                 $ret = file_get_contents($file);
             }
         }else{
-            $ret = $file;
+            $ret = file_get_contents($file);
         }
         return $ret;
     }

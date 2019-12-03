@@ -91,6 +91,20 @@ return [
             'engine' => null,
         ],
 
+        'wxfyl_account' => [
+            'driver' => 'mysql',
+            'host' => '193.112.16.59',
+            'port' => '3306',
+            'database' => 'jh_login3',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'wxfyl_s2002' => [
             'driver' => 'mysql',
             'host' => '118.89.27.234',

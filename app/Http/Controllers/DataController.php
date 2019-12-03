@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Libray\Response;
-use App\Libray\RsaService;
+use App\Libray\RSA;
 use App\Models\Ban;
 use App\Models\Channel;
 use App\Models\Good;
@@ -65,12 +65,21 @@ class DataController extends Controller
         $server  = Server::all()->keyBy('id')->toArray();
 	    $channel = Channel::all()->keyBy('id')->toArray();
 
+	    $username = DB::connection('wxfyl_account')
+            ->table('account')
+            ->select('account', 'uuid')
+            ->get()->toArray();
+
+        $userCount = array_column($username, null, 'uuid');
+
 	    foreach ($list as $key=>$value) {
             $value->cid = $channel[$value->cid]['channel_name'];
             $value->server_name = $server[$value->sid]['server_name'];
             $value->login_time = date('Y-m-d H:i:s', $value->login_time);
             $value->reg_time   = date('Y-m-d H:i:s', $value->reg_time);
             $value->last_time  = date('Y-m-d H:i:s', $value->last_time);
+
+            $value->username = substr($userCount[$value->uuid]->account, 21);
 
             $status = $ban->where(['role_id' => $value->uid, 'serverId' => $value->sid, 'status' => 1])->select('type')->get();
             $value->status = '';
@@ -402,16 +411,24 @@ class DataController extends Controller
     {
         $orm = DB::connection('wxfyl_order')
             ->table('lg_pay')
+            ->where(['sid' => 20002])
             ->select('orderId', 'tranId', 'goodsId', 'uid', 'time', 'sid', 'cid', 'amount');
 
         $list = $orm->paginate(20);
 
 	    $role = DB::connection('wxfyl')
             ->table('user')
-            ->select('uid', 'uname')
+            ->select('uid', 'uname', 'uuid')
+            ->get()->toArray();
+
+	    $username = DB::connection('wxfyl_account')
+            ->table('account')
+            ->select('account', 'uuid')
             ->get()->toArray();
 
         $nameCount = array_column($role, null, 'uid');
+
+        $userCount = array_column($username, null, 'uuid');
 
         $server = Server::all()->keyBy('id')->toArray();
         foreach ($list as $key=>$value) {
@@ -420,8 +437,14 @@ class DataController extends Controller
 
             if (isset($nameCount[$value->uid])){
                 $value->role_name = $nameCount[$value->uid]->uname;
-            }else{
+                if (isset($userCount[$nameCount[$value->uid]->uuid])) {
+                    $value->username = substr($userCount[$nameCount[$value->uid]->uuid]->account, 21);
+                } else {
+                    $value->username = '-';
+                }
+            } else {
                 $value->role_name = '-';
+                $value->username = '-';
             }
         }
 
@@ -443,15 +466,81 @@ class DataController extends Controller
     public function test()
     {
         $data = array(
-            'msg' => '今晚大老虎',
-            'code' => '1234566'
+            'dataKey' => '4tfe53w3dnl2j19c',
+            'AFDI' => '42059079-1CD8-495F-AA79-9FEE18221C81',
+            'economyMsg' => 'iPhone',
+            'didupemtem' => 'e52521983fc847ed8c09c40cfd2cc83b',
+            'isLoading' => false,
+            'VFDI' => 'A9F2CF6C-94F4-4E09-B573-35A4E2DF9DB5',
+            'type' => '2',
+            'irrigation' => '100007',
+            'CFBundleVersion' => 1
         );
 
-        $ras = new RsaService(public_path('./rsa_public_key.pem'), public_path('./rsa_private_key.pem'));
+        dump(base64_decode('iwkA5ip3NTGeot7c56dTI9lIIZpD1IrDUUA2HQWaobDU2/65OS9FA0gv/2B9t3fjBrKIz3X82C+hTO+aTs2SQBRqRDIjft3oxsPcMsIy/KmUAmuZx3L0t6Zr2lheHleEVamTD1iFW4EvcZ0sWr6AmQN1Uy9SaET+C8Kq6osHTMUH+s0PLZN2L782iqi4cEOqXrPniZWj8nYXz7TCCRc9hUZFrku48UydGoAXtRXN8OX2HpJHvKKB+JHBOiRs+KCv4rbMwv0M48wu9u7g51+xnlS1MInKOUCJQMTcoi3c4mwS/3WQmgSh06uyfqMp9S7qqmjQhYblZfhPr9YRf0nGRDXRioMVSIDIP+cqbV5lLJ+14HQZY0AoN5bxaftFgf2rUh+OkvcxcOQG8/kGjs0YHzqUcOXLBF474Fus+GdgHUv3DlejkTxGJcN3Ju+3P5b9VIBug+Ey0m5ZwlzDbBZ70Sx8m4A8Jdf7N9CbElDPnK9K6trHuMxBtJE/f12Ddms5nNSE0dEbRgZUC+MmcMKU2hxbPBab8BBhd7yZwhDnwAjFCa4AjhGaAmzUk7pA24ETFdmIUrSJXK+74QhCPtRMSL39YYuYG2aTWNVYpD7m4x6QsGeeVCQA4yC4nTjuy09r//HHT+auLt0KDO9A0R6nlo9sJ02H1I6WaOBcYkbxHUo='));die;
 
-        $res = $ras->encrypt(json_encode($data));
+        $pubKey = '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQChNeAYA71WgAE0BCYRa5WGNNj+
+K8P3+13+CyD5EMi0MPoN6TVpH3aE/0nMKWu4qwFnYTDNYH/ZakC/3LtxnWyigoYS
+4uXoZf720QxMYOG9C1DorsxeJrl1WXtYuOwHZrDjVIC34yMZ86zH9u8G9WqPEykt
+syzbI7g+RQTl/EWTPQIDAQAB
+-----END PUBLIC KEY-----';
+        $priKey = '-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQChNeAYA71WgAE0BCYRa5WGNNj+K8P3+13+CyD5EMi0MPoN6TVp
+H3aE/0nMKWu4qwFnYTDNYH/ZakC/3LtxnWyigoYS4uXoZf720QxMYOG9C1Dorsxe
+Jrl1WXtYuOwHZrDjVIC34yMZ86zH9u8G9WqPEyktsyzbI7g+RQTl/EWTPQIDAQAB
+AoGAbfyc5KWAg0iYCY4fDtmQzVy3A0qGzGTCbvXWzDcIR+/2WpFWsF8X9ItcJR/J
+b9e0AH1N14FUGNimToBhnpViLLQumaWLllxi5Di76kNCg7ivo2Ml1neK282ZCZ9v
+JOaiAnPEoOWed9Gjx5qWrfF7B5RXyBBtvkHXe1zcIHddwIECQQDW3hN+KzpoRbml
+Bs0WBeFMMvahZY7821vOD/A8T8Dk5XMYttmt8jrOa+pdr987Zmr5RTcwVQ8iftrj
+4Cd0BmXhAkEAwBJAK3w7s2OkA4lOuQoux+urmjvajg9vAU559rY1pxcpgNBFWvEv
+e9jA46trZmWU0h1f/TCycXdr+iEW73Og3QJAbxqmObdgnEpxlEPQCHNB7ITtwsch
+CN7kucjEEGus8q8ytLTYGnoGrnZe2dL3O1/aMMr5nqRdDxlJVkuyGuy0AQJBAL6q
+32zLnPBNv6mLCs0B4MKxnt4zAJj5lTZ00vook0ZV5etr1Q2cU4jb+U+JAcramEuk
+wX80ck/VPylE4+G8pTkCQHu55wyptTjEIxSmiFS31osR0/+CNpf62F5uzgjAMWOi
+udTG2A2mPIiELeLAE7AcTAp4vCnMct7QhHUO3Mxvulg=
+-----END RSA PRIVATE KEY-----
+';
 
-        dump($res);
+
+        $pi_key = openssl_pkey_get_private($priKey);
+
+
+        $pi_key =  openssl_pkey_get_private($priKey);//这个函数可用来判断私钥是否是可用的，可用返回资源id Resource id
+        $pu_key = openssl_pkey_get_public($pubKey);//这个函数可用来判断公钥是否是可用的
+        print_r($pi_key);echo "\n";
+        print_r($pu_key);echo "\n";
+
+        $data1 = base64_encode(json_encode($data));//原始数据
+        $encrypted = "";
+        $decrypted = "";
+
+        openssl_private_encrypt($data1,$encrypted, $pi_key);
+        $encrypted = base64_encode($encrypted);
+
+        dump($encrypted);
+
+
+        //openssl_public_encrypt(json_encode($data),$encrypted,$pu_key);
+
+        //dump($encrypted);
+
+
+        openssl_public_decrypt(base64_decode($encrypted),$decrypted, $pu_key);//私钥加密的内容通过公钥可用解密出来
+        dump($decrypted);die;
+
+
+        /*$ras = new RSA();
+
+        //dump('http://192.168.1.6:8081/rsa_private_key.pem');
+
+        $e = $ras->encrypt(json_encode($data));*/
+
+
+
+        //$res = $ras->encrypt(json_encode($data));
+
+        //dump($res);
     }
 
     /*HRestiQ0FO1ssyFdn2t2vwLlSinLUaOQ1puLpnz4SKtRICjYK0JQbXbLhcfJCkA+5+tevm6sKV3wCEKaR2phZ6WZjlU616bbgQYOeO72yH/pvC4/NO7nKvsRrStkSfid+7vD9bEwwGjLt9fe8LtTJpUPJKT4WcmwKcDtxZ3hJLQ=*/
@@ -461,7 +550,7 @@ class DataController extends Controller
     {
         $data = 'HRestiQ0FO1ssyFdn2t2vwLlSinLUaOQ1puLpnz4SKtRICjYK0JQbXbLhcfJCkA+5+tevm6sKV3wCEKaR2phZ6WZjlU616bbgQYOeO72yH/pvC4/NO7nKvsRrStkSfid+7vD9bEwwGjLt9fe8LtTJpUPJKT4WcmwKcDtxZ3hJLQ=';
 
-        $ras = new RsaService(public_path('./rsa_public_key.pem'), public_path('./rsa_private_key.pem'));
+        $ras = new RSA(public_path('./rsa_public_key.pem'), public_path('./rsa_private_key.pem'));
 
         $res = $ras->decrypt($data);
 

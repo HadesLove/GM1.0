@@ -33,6 +33,27 @@ class ServerController extends Controller
         }
     }
 
+    public function edit(Request $request, Server $server)
+    {
+        $id          = $request->input('id');
+        $logo        = $request->input('logo');
+        $note        = $request->input('note');
+        $server_name = $request->input('server_name');
+
+        $result = $server->where(['id' => $id])
+            ->update([
+                'server_name' => $server_name,
+                'note' => $note,
+                'logo' => $logo
+            ]);
+
+        if ($result) {
+            return response(Response::Success());
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+    }
+
     public function store(Request $request, Server $server)
     {
         $id            = $request->input('id');

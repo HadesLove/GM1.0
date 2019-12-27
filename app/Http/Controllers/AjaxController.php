@@ -85,6 +85,10 @@ class AjaxController extends Controller
             return response(Response::RequestError(137004));
         }
 
+        if (strtotime($res->start_time) > time() && strtotime($res->start_time) < time()){
+            return response(Response::RequestError(137004));
+        }
+
         if ($res['codeBatch']['channel_id'] != 0) {
             if ($res['codeBatch']['channel_id'] != $cid) {
                 return response(Response::RequestError(137003));

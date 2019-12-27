@@ -694,7 +694,7 @@ class GMController extends Controller
             $orm->where(['batch_name' => $batch_name]);
         }
 
-        $list = $orm->paginate(3);
+        $list = $orm->paginate(20);
 
         foreach ($list as $value){
             if ($value['platform'] == '0'){

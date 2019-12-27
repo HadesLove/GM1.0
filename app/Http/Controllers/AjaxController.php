@@ -85,6 +85,10 @@ class AjaxController extends Controller
             return response(Response::RequestError(137004));
         }
 
+        if ($res->code_batch['channel_id'] != $cid){
+            return response(Response::RequestError(137003));
+        }
+
         if ($res->code_batch['server_id'] != 0){
             if ($sid != $res->code_batch['server_id']){
                 return response(Response::RequestError(137005));

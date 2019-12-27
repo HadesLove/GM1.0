@@ -10,6 +10,7 @@ class AccountController extends Controller
     public function store(Request $request, Account $account)
     {
         $data = $request->all();
+        $data = $request->getClientIp();
 
         if ($account->where(['account_name' => $data['name']])->first()){
             return response(Response::Error(trans('ResponseMsg.USER_HAS_EXISTED'), 20005));

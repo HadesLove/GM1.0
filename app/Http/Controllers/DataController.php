@@ -357,7 +357,7 @@ class DataController extends Controller
             Redis::expire('real_time', 600);
         }
 
-        $orm = DB::connection('wxfyl_l2002')
+        $orm = DB::connection('qimen_s20003')
             ->table('lg_chat')
             ->select('id', 'uid', 'chatTime', 'chatChannel', 'chatText');
 

@@ -280,7 +280,6 @@ class GMController extends Controller
         $result = Gmmail::create([
             'role_list'  => $role_list,
             'server_id'  => $serverId,
-            'channel_id' => $channel,
             'account_id' => UID,
             'title'      => $title,
             'content'    => $content,

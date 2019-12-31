@@ -208,6 +208,98 @@ class GMController extends Controller
         }
     }
 
+    public function sendSoloMail(Request $request)
+    {
+        $server    = $request->input('server');
+        $title     = $request->input('title');
+        $role_list = $request->input('role', null);
+        $item_id   = $request->input('item_id');
+        $content   = $request->input('content');
+
+        $serverId = intval($server);
+
+        $item = array();
+        foreach ($item_id as $item_key => $item_value){
+            $item_val = json_decode($item_value, true);
+            if (!empty($item_val)){
+                $item[$item_val['selectVal']] = intval($item_val['num']);
+            }
+        }
+
+        $role = explode("|", $role_list);
+
+        $roleInt = array();
+        foreach ($role as $role_val){
+            array_push($roleInt, intval($role_val));
+        }
+
+        $str_long_title = strlen($title);
+        $titles = '';
+        for ($i=0; $i < $str_long_title ; $i++) {
+            if(preg_match('/^[\x7f-\xff]+$/', $title[$i])){
+                $titles .= urlencode($title[$i]);
+            }else{
+                $titles .= $title[$i];
+            }
+        }
+
+        $str_long_content = strlen($content);
+        $contents = '';
+        for ($i=0; $i < $str_long_content ; $i++) {
+            if(preg_match('/^[\x7f-\xff]+$/', $content[$i])){
+                $contents .= urlencode($content[$i]);
+            }else{
+                $contents .= $content[$i];
+            }
+        }
+
+        $url_args = array(
+            "objects"     => $roleInt,
+            "title"       => strtolower($title),
+            "content"     => strtolower($contents),
+            "items"       => json_encode($item),
+        );
+
+        $time = time();
+        $sign_args = json_encode($url_args);
+        $sign = md5("args={$sign_args}&fun=web_op_sys_mail&mod=mail_api&sid={$serverId}&time={$time}&key={$this->key}");
+
+        //组装内容
+        $info = array(
+            'args'      => $sign_args,
+            'fun'       => 'web_op_sys_mail',
+            'mod'       => 'mail_api',
+            'sid'       => $serverId,
+            'time'      => $time,
+            'sign'      => $sign,
+        );
+
+        //发送内容
+        $res = $this->send_post(env('WXURL'), $info);
+
+        $result = Gmmail::create([
+            'role_list'  => $role_list,
+            'server_id'  => $serverId,
+            'channel_id' => $channel,
+            'account_id' => UID,
+            'title'      => $title,
+            'content'    => $content,
+            'attach_s'   => json_encode($item),
+        ]);
+
+        $res = json_decode($res, true);
+
+        if ($res['res'] == "1") {
+            if ($result){
+                return response(Response::Success());
+            }
+            return response(Response::Error(trans('ResponseMsg.SPECIFIED_QUESTIONED_USER_NOT_EXIST'), 30001));
+
+        } else {
+            return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
+        }
+    }
+
     public function sendMailList(Gmmail $gmmail, Request $request)
     {
         $server_id = $request->input('server_id');

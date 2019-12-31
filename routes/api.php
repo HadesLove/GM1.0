@@ -53,13 +53,13 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::get('info', 'AccountController@accountInfo');
 
     Route::post('send/mail', 'GMController@sendMail');
+    Route::post('send/solo/mail', 'GMController@sendSoloMail');
     Route::any('send/mail/list', 'GMController@sendMailList');
 
     Route::post('roles/gift/store', 'GMController@newRolesGiftStore');
     Route::any('roles/gift/list', 'GMController@newRolesGiftList');
     Route::patch('roles/gift/{id}', 'GMController@newRolesGiftUpdate');
 
-    Route::post('ban/chat', 'GMController@banChat');
     Route::post('ban/login', 'GMController@banLogin');
 
     Route::any('login/notice/list', 'GMController@loginBulletinList');

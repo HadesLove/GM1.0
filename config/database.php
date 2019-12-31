@@ -133,6 +133,20 @@ return [
             'engine' => null,
         ],
 
+        'qimen_s20003' => [
+            'driver' => 'mysql',
+            'host' => '134.175.116.186',
+            'port' => '3306',
+            'database' => 'jh_l20003',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'wxfyl_s2006' => [
             'driver' => 'mysql',
             'host' => '118.89.27.234',

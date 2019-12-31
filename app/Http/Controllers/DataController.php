@@ -303,7 +303,7 @@ class DataController extends Controller
      */
 	public function chatList(Request $request, Ban $ban)
     {
-        $orm = DB::connection('wxfyl_l2002')
+        $orm = DB::connection('qimen_s20003')
             ->table('lg_chat')
             ->select('id', 'uid', 'chatTime', 'chatChannel', 'chatText')
             ->orderBy('id', 'asc');
@@ -461,99 +461,5 @@ class DataController extends Controller
 	protected function number_segment_between($str_num, $min, $max)
     {
         return version_compare($str_num, $min, '>=') and version_compare($str_num, $max, '<=');
-    }
-
-    public function test()
-    {
-        $data = array(
-            'dataKey' => '4tfe53w3dnl2j19c',
-            'AFDI' => '42059079-1CD8-495F-AA79-9FEE18221C81',
-            'economyMsg' => 'iPhone',
-            'didupemtem' => 'e52521983fc847ed8c09c40cfd2cc83b',
-            'isLoading' => false,
-            'VFDI' => 'A9F2CF6C-94F4-4E09-B573-35A4E2DF9DB5',
-            'type' => '2',
-            'irrigation' => '100007',
-            'CFBundleVersion' => 1
-        );
-
-        dump(base64_decode('iwkA5ip3NTGeot7c56dTI9lIIZpD1IrDUUA2HQWaobDU2/65OS9FA0gv/2B9t3fjBrKIz3X82C+hTO+aTs2SQBRqRDIjft3oxsPcMsIy/KmUAmuZx3L0t6Zr2lheHleEVamTD1iFW4EvcZ0sWr6AmQN1Uy9SaET+C8Kq6osHTMUH+s0PLZN2L782iqi4cEOqXrPniZWj8nYXz7TCCRc9hUZFrku48UydGoAXtRXN8OX2HpJHvKKB+JHBOiRs+KCv4rbMwv0M48wu9u7g51+xnlS1MInKOUCJQMTcoi3c4mwS/3WQmgSh06uyfqMp9S7qqmjQhYblZfhPr9YRf0nGRDXRioMVSIDIP+cqbV5lLJ+14HQZY0AoN5bxaftFgf2rUh+OkvcxcOQG8/kGjs0YHzqUcOXLBF474Fus+GdgHUv3DlejkTxGJcN3Ju+3P5b9VIBug+Ey0m5ZwlzDbBZ70Sx8m4A8Jdf7N9CbElDPnK9K6trHuMxBtJE/f12Ddms5nNSE0dEbRgZUC+MmcMKU2hxbPBab8BBhd7yZwhDnwAjFCa4AjhGaAmzUk7pA24ETFdmIUrSJXK+74QhCPtRMSL39YYuYG2aTWNVYpD7m4x6QsGeeVCQA4yC4nTjuy09r//HHT+auLt0KDO9A0R6nlo9sJ02H1I6WaOBcYkbxHUo='));die;
-
-        $pubKey = '-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQChNeAYA71WgAE0BCYRa5WGNNj+
-K8P3+13+CyD5EMi0MPoN6TVpH3aE/0nMKWu4qwFnYTDNYH/ZakC/3LtxnWyigoYS
-4uXoZf720QxMYOG9C1DorsxeJrl1WXtYuOwHZrDjVIC34yMZ86zH9u8G9WqPEykt
-syzbI7g+RQTl/EWTPQIDAQAB
------END PUBLIC KEY-----';
-        $priKey = '-----BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgQChNeAYA71WgAE0BCYRa5WGNNj+K8P3+13+CyD5EMi0MPoN6TVp
-H3aE/0nMKWu4qwFnYTDNYH/ZakC/3LtxnWyigoYS4uXoZf720QxMYOG9C1Dorsxe
-Jrl1WXtYuOwHZrDjVIC34yMZ86zH9u8G9WqPEyktsyzbI7g+RQTl/EWTPQIDAQAB
-AoGAbfyc5KWAg0iYCY4fDtmQzVy3A0qGzGTCbvXWzDcIR+/2WpFWsF8X9ItcJR/J
-b9e0AH1N14FUGNimToBhnpViLLQumaWLllxi5Di76kNCg7ivo2Ml1neK282ZCZ9v
-JOaiAnPEoOWed9Gjx5qWrfF7B5RXyBBtvkHXe1zcIHddwIECQQDW3hN+KzpoRbml
-Bs0WBeFMMvahZY7821vOD/A8T8Dk5XMYttmt8jrOa+pdr987Zmr5RTcwVQ8iftrj
-4Cd0BmXhAkEAwBJAK3w7s2OkA4lOuQoux+urmjvajg9vAU559rY1pxcpgNBFWvEv
-e9jA46trZmWU0h1f/TCycXdr+iEW73Og3QJAbxqmObdgnEpxlEPQCHNB7ITtwsch
-CN7kucjEEGus8q8ytLTYGnoGrnZe2dL3O1/aMMr5nqRdDxlJVkuyGuy0AQJBAL6q
-32zLnPBNv6mLCs0B4MKxnt4zAJj5lTZ00vook0ZV5etr1Q2cU4jb+U+JAcramEuk
-wX80ck/VPylE4+G8pTkCQHu55wyptTjEIxSmiFS31osR0/+CNpf62F5uzgjAMWOi
-udTG2A2mPIiELeLAE7AcTAp4vCnMct7QhHUO3Mxvulg=
------END RSA PRIVATE KEY-----
-';
-
-
-        $pi_key = openssl_pkey_get_private($priKey);
-
-
-        $pi_key =  openssl_pkey_get_private($priKey);//这个函数可用来判断私钥是否是可用的，可用返回资源id Resource id
-        $pu_key = openssl_pkey_get_public($pubKey);//这个函数可用来判断公钥是否是可用的
-        print_r($pi_key);echo "\n";
-        print_r($pu_key);echo "\n";
-
-        $data1 = base64_encode(json_encode($data));//原始数据
-        $encrypted = "";
-        $decrypted = "";
-
-        openssl_private_encrypt($data1,$encrypted, $pi_key);
-        $encrypted = base64_encode($encrypted);
-
-        dump($encrypted);
-
-
-        //openssl_public_encrypt(json_encode($data),$encrypted,$pu_key);
-
-        //dump($encrypted);
-
-
-        openssl_public_decrypt(base64_decode($encrypted),$decrypted, $pu_key);//私钥加密的内容通过公钥可用解密出来
-        dump($decrypted);die;
-
-
-        /*$ras = new RSA();
-
-        //dump('http://192.168.1.6:8081/rsa_private_key.pem');
-
-        $e = $ras->encrypt(json_encode($data));*/
-
-
-
-        //$res = $ras->encrypt(json_encode($data));
-
-        //dump($res);
-    }
-
-    /*HRestiQ0FO1ssyFdn2t2vwLlSinLUaOQ1puLpnz4SKtRICjYK0JQbXbLhcfJCkA+5+tevm6sKV3wCEKaR2phZ6WZjlU616bbgQYOeO72yH/pvC4/NO7nKvsRrStkSfid+7vD9bEwwGjLt9fe8LtTJpUPJKT4WcmwKcDtxZ3hJLQ=*/
-
-
-    public function gologn()
-    {
-        $data = 'HRestiQ0FO1ssyFdn2t2vwLlSinLUaOQ1puLpnz4SKtRICjYK0JQbXbLhcfJCkA+5+tevm6sKV3wCEKaR2phZ6WZjlU616bbgQYOeO72yH/pvC4/NO7nKvsRrStkSfid+7vD9bEwwGjLt9fe8LtTJpUPJKT4WcmwKcDtxZ3hJLQ=';
-
-        $ras = new RSA(public_path('./rsa_public_key.pem'), public_path('./rsa_private_key.pem'));
-
-        $res = $ras->decrypt($data);
-
-        dump(json_decode($res, true));
     }
 }

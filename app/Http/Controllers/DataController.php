@@ -30,7 +30,7 @@ class DataController extends Controller
 	    $by         = $request->input('by');
 	    $time       = $request->input('time');
 
-        $orm = DB::connection('wxfyl')
+        $orm = DB::connection('qimen')
             ->table('user')
             ->select('uid', 'uuid', 'sid', 'cid', 'uname', 'sex', 'renown_lv', 'pay_gold', 'renown', 'gold', 'silver', 'reg_time', 'reg_ip', 'login_times','login_time', 'last_time', 'last_ip');
 

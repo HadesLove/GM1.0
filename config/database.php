@@ -77,6 +77,20 @@ return [
             'engine' => null,
         ],
 
+        'qimen' => [
+            'driver' => 'mysql',
+            'host' => '134.175.142.205',
+            'port' => '3306',
+            'database' => 'jh_s20003',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'wxfyl_order' => [
             'driver' => 'mysql',
             'host' => '193.112.16.59',

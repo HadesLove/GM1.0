@@ -370,7 +370,7 @@ class DataController extends Controller
 
         $list = $orm->get();
 
-	    $role = DB::connection('wxfyl_s2002')
+	    $role = DB::connection('qimen')
             ->table('user')
             ->select('uid', 'uname')
             ->get()->toArray();

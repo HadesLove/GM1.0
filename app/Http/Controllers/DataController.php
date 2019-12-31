@@ -310,7 +310,7 @@ class DataController extends Controller
 
         $list = $orm->paginate(20);
 
-        $role = DB::connection('wxfyl_s2002')
+        $role = DB::connection('qimen')
             ->table('user')
             ->select('uid', 'uname')
             ->get()->toArray();
@@ -326,7 +326,7 @@ class DataController extends Controller
                 $value->role_name = '-';
             }
 
-            $status = $ban->where(['role_id' => $value->uid, 'serverId' => 2002, 'status' => 1, 'type' => 1])->select('type')->first();
+            $status = $ban->where(['role_id' => $value->uid, 'serverId' => 20003, 'status' => 1, 'type' => 1])->select('type')->first();
             $value->status = '';
 
             if ($status) {
@@ -386,7 +386,7 @@ class DataController extends Controller
                 $value->role_name = '-';
             }
 
-            $status = $ban->where(['role_id' => $value->uid, 'serverId' => 2002, 'status' => 1, 'type' => 1])->select('type')->first();
+            $status = $ban->where(['role_id' => $value->uid, 'serverId' => 20003, 'status' => 1, 'type' => 1])->select('type')->first();
             $value->status = '';
 
             if ($status) {

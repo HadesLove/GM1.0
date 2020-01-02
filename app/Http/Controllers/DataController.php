@@ -256,6 +256,7 @@ class DataController extends Controller
 	public function roleStreamList(Request $request)
 	{
 	    $role_id = $request->input('role_id', null);
+	    $server_id = $request->input('server_id', null);
 
 	    $time = $request->input('time', null);
 

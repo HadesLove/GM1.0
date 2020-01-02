@@ -411,7 +411,6 @@ class DataController extends Controller
     {
         $orm = DB::connection('wxfyl_order')
             ->table('lg_pay')
-            ->where(['sid' => 20002])
             ->select('orderId', 'tranId', 'goodsId', 'uid', 'time', 'sid', 'cid', 'amount');
 
         $list = $orm->paginate(20);

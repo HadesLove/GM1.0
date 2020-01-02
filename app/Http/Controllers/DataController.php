@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Redis;
 
 class DataController extends Controller
 {
+    protected $database = array(
+        '20003' => array('user' => 'jyzj', 'chat' => 'jyzj_chat'),
+        '20004' => array('user' => 'bmsg', 'chat' => 'bmsg_chat'),
+        '20005' => array('user' => 'bhgr', 'chat' => 'bhgr_chat'),
+    );
+
+
     /**
      * 角色列表
      * @param Request $request
@@ -30,7 +37,7 @@ class DataController extends Controller
 	    $by         = $request->input('by');
 	    $time       = $request->input('time');
 
-        $orm = DB::connection('qimen')
+        $orm = DB::connection($this->database[$server_id]['user'])
             ->table('user')
             ->select('uid', 'uuid', 'sid', 'cid', 'uname', 'sex', 'renown_lv', 'pay_gold', 'renown', 'gold', 'silver', 'reg_time', 'reg_ip', 'login_times','login_time', 'last_time', 'last_ip');
 
@@ -44,10 +51,6 @@ class DataController extends Controller
 
         if ($channel_id){
            $orm->where(['cid' => $channel_id]);
-        }
-
-        if ($server_id){
-           $orm->where(['sid' => $server_id]);
         }
 
         if ($time[0] && $time[1]){
@@ -65,7 +68,7 @@ class DataController extends Controller
         $server  = Server::all()->keyBy('id')->toArray();
 	    $channel = Channel::all()->keyBy('id')->toArray();
 
-	    $username = DB::connection('wxfyl_account')
+	    $username = DB::connection('account')
             ->table('account')
             ->select('account', 'uuid')
             ->get()->toArray();
@@ -303,14 +306,16 @@ class DataController extends Controller
      */
 	public function chatList(Request $request, Ban $ban)
     {
-        $orm = DB::connection('qimen_s20003')
+        $server_id = $request->input('server_id');
+
+        $orm = DB::connection($this->database[$server_id]['chat'])
             ->table('lg_chat')
             ->select('id', 'uid', 'chatTime', 'chatChannel', 'chatText')
             ->orderBy('id', 'asc');
 
         $list = $orm->paginate(20);
 
-        $role = DB::connection('qimen')
+        $role = DB::connection($this->database[$server_id]['user'])
             ->table('user')
             ->select('uid', 'uname')
             ->get()->toArray();
@@ -326,7 +331,7 @@ class DataController extends Controller
                 $value->role_name = '-';
             }
 
-            $status = $ban->where(['role_id' => $value->uid, 'serverId' => 20003, 'status' => 1, 'type' => 1])->select('type')->first();
+            $status = $ban->where(['role_id' => $value->uid, 'serverId' => $server_id, 'status' => 1, 'type' => 1])->select('type')->first();
             $value->status = '';
 
             if ($status) {
@@ -350,6 +355,7 @@ class DataController extends Controller
     public function RealTimeChat(Request $request, Ban $ban)
     {
         $id = $request->input('id');
+        $server_id = $request->input('server_id');
 
         if (!Redis::get('real_time')){
             $time = time();
@@ -357,7 +363,7 @@ class DataController extends Controller
             Redis::expire('real_time', 600);
         }
 
-        $orm = DB::connection('qimen_s20003')
+        $orm = DB::connection($this->database[$server_id]['chat'])
             ->table('lg_chat')
             ->select('id', 'uid', 'chatTime', 'chatChannel', 'chatText');
 
@@ -370,7 +376,7 @@ class DataController extends Controller
 
         $list = $orm->get();
 
-	    $role = DB::connection('qimen')
+	    $role = DB::connection($this->database[$server_id]['user'])
             ->table('user')
             ->select('uid', 'uname')
             ->get()->toArray();
@@ -386,7 +392,7 @@ class DataController extends Controller
                 $value->role_name = '-';
             }
 
-            $status = $ban->where(['role_id' => $value->uid, 'serverId' => 20003, 'status' => 1, 'type' => 1])->select('type')->first();
+            $status = $ban->where(['role_id' => $value->uid, 'serverId' => $server_id, 'status' => 1, 'type' => 1])->select('type')->first();
             $value->status = '';
 
             if ($status) {
@@ -409,18 +415,44 @@ class DataController extends Controller
      */
     public function OrderList(Request $request)
     {
-        $orm = DB::connection('wxfyl_order')
+        $role_id    = $request->input('role_id');
+        $tranId    = $request->input('tran_id');
+        $orderId    = $request->input('order_id');
+	    $channel_id = $request->input('channel_id');
+	    $server_id  = $request->input('server_id');
+
+        $orm = DB::connection('order')
             ->table('lg_pay')
             ->select('orderId', 'tranId', 'goodsId', 'uid', 'time', 'sid', 'cid', 'amount');
 
+        if ($role_id) {
+            $orm->where(['uid' => $role_id]);
+        }
+
+        if ($server_id) {
+            $orm->where(['sid' => $server_id]);
+        }
+
+        if ($channel_id) {
+            $orm->where(['cid' => $channel_id]);
+        }
+
+        if ($tranId) {
+            $orm->where(['tranId' => $tranId]);
+        }
+
+        if ($orderId) {
+            $orm->where(['orderId' => $orderId]);
+        }
+
         $list = $orm->paginate(20);
 
-	    $role = DB::connection('wxfyl')
+	    $role = DB::connection($this->database[$server_id]['user'])
             ->table('user')
             ->select('uid', 'uname', 'uuid')
             ->get()->toArray();
 
-	    $username = DB::connection('wxfyl_account')
+	    $username = DB::connection('account')
             ->table('account')
             ->select('account', 'uuid')
             ->get()->toArray();

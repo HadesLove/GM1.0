@@ -63,6 +63,90 @@ return [
             ]) : [],
         ],
 
+        'jyzj' => [
+            'driver' => 'mysql',
+            'host' => '134.175.142.205',
+            'port' => '3306',
+            'database' => 'jh_s20003',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'jyzj_chat' => [
+            'driver' => 'mysql',
+            'host' => '134.175.116.186',
+            'port' => '3306',
+            'database' => 'jh_l20003',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'bmsg' => [
+            'driver' => 'mysql',
+            'host' => '134.175.142.205',
+            'port' => '3306',
+            'database' => 'jh_s20004',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'bmsg_chat' => [
+            'driver' => 'mysql',
+            'host' => '134.175.116.186',
+            'port' => '3306',
+            'database' => 'jh_l20004',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'bhgr' => [
+            'driver' => 'mysql',
+            'host' => '134.175.142.205',
+            'port' => '3306',
+            'database' => 'jh_s20005',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'bhgr_chat' => [
+            'driver' => 'mysql',
+            'host' => '134.175.116.186',
+            'port' => '3306',
+            'database' => 'jh_l20005',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'wxfyl' => [
             'driver' => 'mysql',
             'host' => '134.175.142.205',
@@ -91,7 +175,7 @@ return [
             'engine' => null,
         ],
 
-        'wxfyl_order' => [
+        'order' => [
             'driver' => 'mysql',
             'host' => '193.112.16.59',
             'port' => '3306',
@@ -105,7 +189,7 @@ return [
             'engine' => null,
         ],
 
-        'wxfyl_account' => [
+        'account' => [
             'driver' => 'mysql',
             'host' => '193.112.16.59',
             'port' => '3306',

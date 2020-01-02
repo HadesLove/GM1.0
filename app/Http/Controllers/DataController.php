@@ -259,7 +259,7 @@ class DataController extends Controller
 
 	    $time = $request->input('time', null);
 
-        $orm = DB::connection('wxfyl_l2002')
+        $orm = DB::connection($this->database[$server_id]['chat'])
             ->table('lg_role_stream')
             ->select('id', 'channel', 'userCode', 'serverId', 'roleId', 'loginTime', 'loginOutTime', 'onlineTime', 'createTime');
 
@@ -274,7 +274,7 @@ class DataController extends Controller
 
         $server  = Server::all()->keyBy('id')->toArray();
 
-        $role = DB::connection('wxfyl')
+        $role = DB::connection($this->database[$server_id]['user'])
             ->table('user')
             ->select('uid', 'uname')
             ->get()->toArray();

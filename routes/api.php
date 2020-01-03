@@ -22,8 +22,6 @@ Route::any('exclude/repeat', 'AjaxController@ExcludeRepeat');
 Route::any('device/activation', 'AjaxController@DeviceActivation');
 Route::any('check/activation', 'AjaxController@checkActivation');
 Route::any('callback', 'AjaxController@callback');
-Route::any('test', 'DataController@test');
-Route::any('gologn', 'DataController@gologn');
 
 Route::post('time/tack1', 'GameController@timeTack');
 
@@ -99,7 +97,7 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('chat/list', 'DataController@chatList');
     Route::any('real/time/chat', 'DataController@RealTimeChat');
     Route::any('order/list', 'DataController@OrderList');
-    Route::any('item/list', 'DataController@itemSendList');
+    Route::any('item/list', 'DataController@itemList');
 
     Route::post('ban/chat', 'GameController@banChat');
     Route::post('recharge', 'GameController@recharge');

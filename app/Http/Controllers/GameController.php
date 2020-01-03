@@ -229,10 +229,11 @@ class GameController extends Controller
         $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
 
         if ($result['res'] == "1") {
-            $item->uid     = $uid;
-            $item->item_id = $item_id;
-            $item->count   = $count;
-            $itemResult    = $item->save();
+            $item->uid       = $uid;
+            $item->item_id   = $item_id;
+            $item->count     = $count;
+            $item->server_id = $serverId;
+            $itemResult      = $item->save();
             if ($itemResult){
                 return response(Response::Success());
             }

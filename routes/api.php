@@ -99,6 +99,7 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('chat/list', 'DataController@chatList');
     Route::any('real/time/chat', 'DataController@RealTimeChat');
     Route::any('order/list', 'DataController@OrderList');
+    Route::any('item/list', 'DataController@itemSendList');
 
     Route::post('ban/chat', 'GameController@banChat');
     Route::post('recharge', 'GameController@recharge');

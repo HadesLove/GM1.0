@@ -7,6 +7,7 @@ use App\Libray\RSA;
 use App\Models\Ban;
 use App\Models\Channel;
 use App\Models\Good;
+use App\Models\Item;
 use App\Models\Server;
 use DB;
 use Illuminate\Http\Request;
@@ -487,6 +488,19 @@ class DataController extends Controller
         }
 
         return response(Response::Success($list));
+    }
+
+    public function itemList(Request $request, Item $item)
+    {
+        $orm = $item->paginate(20);
+
+        $goods = Good::all()->keyBy('id')->toArray();
+
+        foreach ($orm as $value) {
+            $value['item_id'] = $goods[$value->item_id];
+        }
+
+        return response(Response::Success($orm));
     }
 
     /**

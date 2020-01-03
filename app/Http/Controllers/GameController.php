@@ -228,13 +228,12 @@ class GameController extends Controller
 
         $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
 
-        $item->uid     = $uid;
-        $item->item_id = $item_id;
-        $item->count   = $count;
-        $result        = $item->save();
-
         if ($result['res'] == "1") {
-            if ($result){
+            $item->uid     = $uid;
+            $item->item_id = $item_id;
+            $item->count   = $count;
+            $itemResult    = $item->save();
+            if ($itemResult){
                 return response(Response::Success());
             }
             return response(Response::Error(trans('ResponseMsg.SPECIFIED_QUESTIONED_USER_NOT_EXIST'), 30001));

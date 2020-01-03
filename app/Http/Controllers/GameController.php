@@ -6,6 +6,7 @@ use App\Models\Announcement;
 use App\Models\Ban;
 use App\Models\Broadcast;
 use App\Models\IpOperation;
+use App\Models\Item;
 use App\Models\NewRole;
 use App\Models\Server;
 use Illuminate\Http\Request;
@@ -208,7 +209,7 @@ class GameController extends Controller
     /**
      * 发送道具
      */
-    public function sendProp(Request $request)
+    public function sendProp(Request $request, Item $item)
     {
         $serverId = $request->input('server_id');
         $uid      = $request->input('uid');
@@ -227,8 +228,16 @@ class GameController extends Controller
 
         $result = $this->requestWX($url_args, $fun, $mod, $time, $serverId, $this->key);
 
+        $item->uid     = $uid;
+        $item->item_id = $item_id;
+        $item->count   = $count;
+        $result        = $item->save();
+
         if ($result['res'] == "1") {
-            return response(Response::Success());
+            if ($result){
+                return response(Response::Success());
+            }
+            return response(Response::Error(trans('ResponseMsg.SPECIFIED_QUESTIONED_USER_NOT_EXIST'), 30001));
         } else {
             return response(Response::Error(trans('ResponseMsg.SYSTEM_INNER_ERROR'), 40001));
         }

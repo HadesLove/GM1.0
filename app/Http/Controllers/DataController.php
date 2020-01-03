@@ -494,10 +494,12 @@ class DataController extends Controller
     {
         $orm = $item->paginate(20);
 
-        $goods = Good::all()->keyBy('id')->toArray();
+        $goods   = Good::all()->keyBy('id')->toArray();
+        $servers = Server::all()->keyBy('id')->toArray();
 
         foreach ($orm as $value) {
-            $value['item_id'] = $goods[$value->item_id];
+            $value['item_id']   = $goods[$value->item_id]['good_name'];
+            $value['server_id'] = $servers[$value->server_id]['server_name'];
         }
 
         return response(Response::Success($orm));

@@ -417,13 +417,15 @@ class DataController extends Controller
     public function OrderList(Request $request)
     {
         $role_id    = $request->input('role_id');
-        $tranId    = $request->input('tran_id');
+        $tranId     = $request->input('tran_id');
         $orderId    = $request->input('order_id');
 	    $channel_id = $request->input('channel_id');
 	    $server_id  = $request->input('server_id');
+	    $time       = $request->input('time');
 
         $orm = DB::connection('order')
             ->table('lg_pay')
+            ->orderBy('time', 'DESC')
             ->select('orderId', 'tranId', 'goodsId', 'uid', 'time', 'sid', 'cid', 'amount');
 
         if ($role_id) {
@@ -444,6 +446,10 @@ class DataController extends Controller
 
         if ($orderId) {
             $orm->where(['orderId' => $orderId]);
+        }
+
+        if ($time[0] && $time[1]) {
+            $orm->whereBetween('time', array(strtotime($time[0]), strtotime($time[1])));
         }
 
         $list = $orm->paginate(20);

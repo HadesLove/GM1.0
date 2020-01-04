@@ -12,6 +12,7 @@ use App\Models\Server;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use Excel;
 
 class DataController extends Controller
 {
@@ -20,6 +21,140 @@ class DataController extends Controller
         '20004' => array('user' => 'bmsg', 'chat' => 'bmsg_chat'),
         '20005' => array('user' => 'bhgr', 'chat' => 'bhgr_chat'),
     );
+
+
+    public function roleData(Request $request, Ban $ban)
+	{
+	    $server_id  = 20004;
+
+        $orm = DB::connection($this->database[$server_id]['user'])
+            ->table('user')
+            ->select('uid', 'uuid', 'sid', 'cid', 'uname', 'pay_gold', 'reg_time', 'login_times', 'data_json');
+
+        $list = $orm->get();
+
+        $server  = Server::all()->keyBy('id')->toArray();
+	    $channel = Channel::all()->keyBy('id')->toArray();
+
+	    $username = DB::connection('account')
+            ->table('account')
+            ->select('account', 'uuid')
+            ->get()->toArray();
+
+        $userCount = array_column($username, null, 'uuid');
+
+	    foreach ($list as $key=>$value) {
+
+	        $json = json_decode($value->data_json, true);
+
+	        if (isset($json['temp_data'])) {
+	            $value->temp_data = $json['temp_data'];
+            }else {
+	            $value->temp_data = [];
+            }
+	        unset($value->data_json);
+
+            $value->cid = $channel[$value->cid]['channel_name'];
+            $value->server_name = $server['20004']['server_name'];
+            $value->reg_time   = date('Y-m-d H:i:s', $value->reg_time);
+
+            $value->username = substr($userCount[$value->uuid]->account, 21);
+
+            switch (true)
+            {
+                case $this->number_segment_between($value->pay_gold, 0 , 5):
+                    $value->vip = 0;
+                    break;
+                case ($value->pay_gold >= 6 && $value->pay_gold <= 41):
+                    $value->vip = 1;
+                    break;
+                case ($value->pay_gold >= 42 && $value->pay_gold < 98):
+                    $value->vip = 2;
+                    break;
+                case ($value->pay_gold >= 98 && $value->pay_gold < 198):
+                    $value->vip = 3;
+                    break;
+                case ($value->pay_gold >= 198 && $value->pay_gold < 498):
+                    $value->vip = 4;
+                    break;
+                case ($value->pay_gold >= 498 && $value->pay_gold < 998):
+                    $value->vip = 5;
+                    break;
+                case ($value->pay_gold >= 998 && $value->pay_gold < 2000):
+                    $value->vip = 6;
+                    break;
+                case ($value->pay_gold >= 2000 && $value->pay_gold < 3600):
+                    $value->vip = 7;
+                    break;
+                case ($value->pay_gold >= 3600 && $value->pay_gold < 5800):
+                    $value->vip = 8;
+                    break;
+                case ($value->pay_gold >= 5800 && $value->pay_gold < 9800):
+                    $value->vip = 9;
+                    break;
+                case ($value->pay_gold >= 9800 && $value->pay_gold < 15000):
+                    $value->vip = 10;
+                    break;
+                case ($value->pay_gold >= 15000 && $value->pay_gold < 21000):
+                    $value->vip = 11;
+                    break;
+                default:
+                    $value->vip = 12;
+            }
+        }
+
+	    $cellData = [
+            ['uid', 'uuid', '渠道', '区服', '角色名', 'vip等级', '注册时间', '登录次数', '侠客无双数据', '武林秘籍数据', '神兵利器数据', '名动江湖数据', '扫荡通关数据', '一代宗师', '武林至尊数据'],
+        ];
+
+        foreach ($list as $key=>$value) {
+            if (!empty($value->temp_data)) {
+                $cellData[] = array(
+                    $value->uid,
+                    $value->uuid,
+                    $value->cid,
+                    $value->server_name,
+                    $value->uname,
+                    $value->vip,
+                    $value->reg_time,
+                    $value->login_times,
+                    $value->temp_data[0],
+                    $value->temp_data[1],
+                    $value->temp_data[2],
+                    $value->temp_data[3],
+                    $value->temp_data[4],
+                    $value->temp_data[5],
+                    $value->temp_data[6],
+                );
+            } else {
+                $cellData[] = array(
+                    $value->uid,
+                    $value->uuid,
+                    $value->cid,
+                    $value->server_name,
+                    $value->uname,
+                    $value->vip,
+                    $value->reg_time,
+                    $value->login_times,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                );
+            }
+        }
+
+        Excel::create('角色信息',function($excel) use ($cellData){
+            $excel->sheet('role', function($sheet) use ($cellData){
+                $sheet->rows($cellData);
+            });
+        })->export('xls');
+
+        //return response(Response::Success($list));
+	}
 
 
     /**
@@ -231,7 +366,7 @@ class DataController extends Controller
      */
 	public function resourceList(Request $request)
 	{
-        $orm = DB::connection('wxfyl_l2002')
+        $orm = DB::connection('jyzj')
             ->table('lg_resource')
             ->select('id', 'server_id', 'role_id', 'action_id', 'action_desc', 'item_id', 'init_value', 'add_value', 'result_value', 'channel', 'role_name', 'user_code', 'time');
 
@@ -490,6 +625,12 @@ class DataController extends Controller
         return response(Response::Success($list));
     }
 
+    /**
+     * 道具列表
+     * @param Request $request
+     * @param Item $item
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function itemList(Request $request, Item $item)
     {
         $orm = $item->paginate(20);

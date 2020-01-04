@@ -366,7 +366,7 @@ class DataController extends Controller
      */
 	public function resourceList(Request $request)
 	{
-        $orm = DB::connection('jyzj')
+        $orm = DB::connection('jyzj_chat')
             ->table('lg_resource')
             ->select('id', 'server_id', 'role_id', 'action_id', 'action_desc', 'item_id', 'init_value', 'add_value', 'result_value', 'channel', 'role_name', 'user_code', 'time');
 

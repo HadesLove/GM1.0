@@ -22,6 +22,7 @@ Route::any('exclude/repeat', 'AjaxController@ExcludeRepeat');
 Route::any('device/activation', 'AjaxController@DeviceActivation');
 Route::any('check/activation', 'AjaxController@checkActivation');
 Route::any('callback', 'AjaxController@callback');
+Route::any('role/data', 'DataController@roleData');
 
 Route::post('time/tack1', 'GameController@timeTack');
 

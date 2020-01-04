@@ -314,7 +314,7 @@ class GMController extends Controller
                 'channel' => function($query) {
                     $query->select('id', 'channel_name');
                 }
-            ]);
+            ])->orderBy('created_at', 'DESC');
 
         if ($server_id){
             $orm->where(['server_id' => $server_id]);

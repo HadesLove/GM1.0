@@ -55,7 +55,7 @@ class DataController extends Controller
 	        unset($value->data_json);
 
             $value->cid = $channel[$value->cid]['channel_name'];
-            $value->server_name = $server['20004']['server_name'];
+            $value->server_name = $server[$server_id]['server_name'];
             $value->reg_time   = date('Y-m-d H:i:s', $value->reg_time);
 
             $value->username = substr($userCount[$value->uuid]->account, 21);
@@ -175,7 +175,7 @@ class DataController extends Controller
 
         $orm = DB::connection($this->database[$server_id]['user'])
             ->table('user')
-            ->select('uid', 'uuid', 'sid', 'cid', 'uname', 'sex', 'renown_lv', 'pay_gold', 'renown', 'gold', 'silver', 'reg_time', 'reg_ip', 'login_times','login_time', 'last_time', 'last_ip');
+            ->select('uid', 'uuid', 'sid', 'cid', 'uname', 'sex', 'renown_lv', 'pay_gold', 'renown', 'gold', 'silver', 'reg_time', 'reg_ip', 'login_times','login_time', 'last_time', 'last_ip', 'data_json');
 
         if ($role_id){
            $orm->where(['uid' => $role_id]);
@@ -212,6 +212,27 @@ class DataController extends Controller
         $userCount = array_column($username, null, 'uuid');
 
 	    foreach ($list as $key=>$value) {
+	        $json = json_decode($value->data_json, true);
+
+	        if (isset($json['temp_data'])) {
+	            $value->chivalrousMan = $json['temp_data'][0];
+	            $value->wulinSecret   = $json['temp_data'][1];
+	            $value->magicWeapon   = $json['temp_data'][2];
+	            $value->dynamic       = $json['temp_data'][3];
+	            $value->sweeping      = $json['temp_data'][4];
+	            $value->grandMaster   = $json['temp_data'][5];
+	            $value->wulinSupreme  = $json['temp_data'][6];
+            }else {
+	            $value->chivalrousMan = 0;
+	            $value->wulinSecret   = 0;
+	            $value->magicWeapon   = 0;
+	            $value->dynamic       = 0;
+	            $value->sweeping      = 0;
+	            $value->grandMaster   = 0;
+	            $value->wulinSupreme  = 0;
+            }
+	        unset($value->data_json);
+
             $value->cid = $channel[$value->cid]['channel_name'];
             $value->server_name = $server[$value->sid]['server_name'];
             $value->login_time = date('Y-m-d H:i:s', $value->login_time);
@@ -366,9 +387,15 @@ class DataController extends Controller
      */
 	public function resourceList(Request $request)
 	{
+	    $role_id = $request->input('role_id');
+
         $orm = DB::connection('jyzj_chat')
             ->table('lg_resource')
             ->select('id', 'server_id', 'role_id', 'action_id', 'action_desc', 'item_id', 'init_value', 'add_value', 'result_value', 'channel', 'role_name', 'user_code', 'time');
+
+        if ($role_id) {
+            $orm->where(['role_id' => $role_id]);
+        }
 
         $list = $orm->paginate(20);
 

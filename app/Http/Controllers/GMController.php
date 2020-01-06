@@ -103,10 +103,12 @@ class GMController extends Controller
         $serverId = intval($server);
 
         $item = array();
-        foreach ($item_id as $item_key => $item_value){
-            $item_val = json_decode($item_value, true);
-            if (!empty($item_val)){
-                $item[$item_val['selectVal']] = intval($item_val['num']);
+        if ($item_id) {
+            foreach ($item_id as $item_key => $item_value) {
+                $item_val = json_decode($item_value, true);
+                if (!empty($item_val)) {
+                    $item[$item_val['selectVal']] = intval($item_val['num']);
+                }
             }
         }
 

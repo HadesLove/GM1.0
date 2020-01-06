@@ -23,7 +23,6 @@ Route::any('device/activation', 'AjaxController@DeviceActivation');
 Route::any('check/activation', 'AjaxController@checkActivation');
 Route::any('callback', 'AjaxController@callback');
 Route::any('role/data', 'DataController@roleData');
-Route::any('role/list', 'DataController@roleList');
 
 Route::post('time/tack1', 'GameController@timeTack');
 
@@ -91,7 +90,7 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('announcement/list', 'GMController@AnnouncementList');
     Route::post('announcement', 'GMController@AnnouncementStore');
 
-
+    Route::any('role/list', 'DataController@roleList');
     Route::any('wife/list', 'DataController@wifeList');
     Route::any('child/list', 'DataController@childList');
     Route::any('role/stream/list', 'DataController@roleStreamList');

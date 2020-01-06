@@ -387,14 +387,30 @@ class DataController extends Controller
      */
 	public function resourceList(Request $request)
 	{
-	    $role_id = $request->input('role_id');
+	    $role_id   = $request->input('role_id');
+	    $server_id = $request->input('server_id');
+	    $goods_id  = $request->input('goods_id');
+	    $details   = $request->input('details');
+	    $time      = $request->input('time');
 
-        $orm = DB::connection('jyzj_chat')
+        $orm = DB::connection($this->database[$server_id]['chat'])
             ->table('lg_resource')
             ->select('id', 'server_id', 'role_id', 'action_id', 'action_desc', 'item_id', 'init_value', 'add_value', 'result_value', 'channel', 'role_name', 'user_code', 'time');
 
         if ($role_id) {
             $orm->where(['role_id' => $role_id]);
+        }
+
+        if ($goods_id) {
+            $orm->where(['item_id' => $goods_id]);
+        }
+
+        if ($details) {
+            $orm->where('action_desc', 'like', '%' . $details . '%');
+        }
+
+        if ($time[0] && $time[1]) {
+            $orm->whereBetween('time', array(strtotime($time[0]), strtotime($time[1])));
         }
 
         $list = $orm->paginate(20);

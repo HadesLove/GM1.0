@@ -20,12 +20,13 @@ class DataController extends Controller
         '20003' => array('user' => 'jyzj', 'chat' => 'jyzj_chat'),
         '20004' => array('user' => 'bmsg', 'chat' => 'bmsg_chat'),
         '20005' => array('user' => 'bhgr', 'chat' => 'bhgr_chat'),
+        '20006' => array('user' => 'twzx', 'chat' => 'twzx_chat'),
     );
 
 
     public function roleData(Request $request, Ban $ban)
 	{
-	    $server_id  = 20004;
+	    $server_id  = 20003;
 
         $orm = DB::connection($this->database[$server_id]['user'])
             ->table('user')
@@ -314,12 +315,12 @@ class DataController extends Controller
      */
     public function wifeList(Request $request)
 	{
-	    $uid      = $request->input('uid');
-	    $channel  = $request->input('channel');
-	    $wife_id  = $request->input('wife_id');
-	    $intimacy = $request->input('intimacy');
+	    $uid             = $request->input('uid');
+	    $channel         = $request->input('channel');
+	    $wife_id         = $request->input('wife_id');
+	    $intimacy        = $request->input('intimacy');
 	    $wife_event_desc = $request->input('wife_event_desc');
-	    $time     = $request->input('time');
+	    $time            = $request->input('time');
 
         $orm = DB::connection('wxfyl_l2002')
             ->table('lg_wife')

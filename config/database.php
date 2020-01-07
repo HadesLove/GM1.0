@@ -147,6 +147,34 @@ return [
             'engine' => null,
         ],
 
+        'twzx' => [
+            'driver' => 'mysql',
+            'host' => '134.175.142.205',
+            'port' => '3306',
+            'database' => 'jh_s20006',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'twzx_chat' => [
+            'driver' => 'mysql',
+            'host' => '134.175.116.186',
+            'port' => '3306',
+            'database' => 'jh_l20006',
+            'username' => 'root',
+            'password' => 'angel198297',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'wxfyl' => [
             'driver' => 'mysql',
             'host' => '134.175.142.205',

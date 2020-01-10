@@ -21,6 +21,12 @@ class DataController extends Controller
         '20004' => array('user' => 'bmsg', 'chat' => 'bmsg_chat'),
         '20005' => array('user' => 'bhgr', 'chat' => 'bhgr_chat'),
         '20006' => array('user' => 'twzx', 'chat' => 'twzx_chat'),
+        '20007' => array('user' => 'khbd', 'chat' => 'khbd_chat'),
+        '20008' => array('user' => 'gdjj', 'chat' => 'gdjj_chat'),
+        '20009' => array('user' => 'lbwb', 'chat' => 'lbwb_chat'),
+        '20010' => array('user' => 'sptj', 'chat' => 'sptj_chat'),
+        '20011' => array('user' => 'cjsz', 'chat' => 'cjsz_chat'),
+        '20012' => array('user' => 'xxdf', 'chat' => 'xxdf_chat'),
     );
 
 

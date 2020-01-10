@@ -481,7 +481,7 @@ class DataController extends Controller
             $orm->whereBetween('time', array(strtotime($time[0]), strtotime($time[1])));
         }
 
-        $list = $orm->paginate(20);
+        $list = $orm->get();
 
         $server = Server::all()->keyBy('id')->toArray();
         $good   = Good::all()->keyBy('id')->toArray();

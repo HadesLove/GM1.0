@@ -11,3 +11,4 @@ npm-debug.log
 yarn-error.log
 .idea
 /storage/excel/*
+/storage/app/public/*

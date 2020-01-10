@@ -154,13 +154,30 @@ class DataController extends Controller
             }
         }
 
-        Excel::create('角色信息',function($excel) use ($cellData){
+        $random = mt_rand(10000, 99999);
+
+        $date = date('Y-m-d', time());
+
+        $excel_path = storage_path('/app/public/excel/'. $date . '/');
+
+        $file_name = $date . $random . '角色信息';
+
+        Excel::create($file_name ,function($excel) use ($cellData){
             $excel->sheet('role', function($sheet) use ($cellData){
                 $sheet->rows($cellData);
             });
-        })->download('xls');
+        })->store('xls', $excel_path);
 
-        //return response(Response::Success($list));
+        $url = env('APP_URL') . '/storage/excel/' . $date . '/' . $file_name;
+
+
+        /*Excel::create('角色资源信息.xls',function($excel) use ($cellData){
+            $excel->sheet('resource', function($sheet) use ($cellData){
+                $sheet->rows($cellData);
+            });
+        })->store('xls', $excel_path);*/
+
+        return response(Response::Success($url));
 	}
 
 
@@ -494,13 +511,24 @@ class DataController extends Controller
             );
         }
 
-        Excel::create('角色资源信息',function($excel) use ($cellData){
+        $random = mt_rand(10000, 99999);
+
+        $date = date('Y-m-d', time());
+
+        $excel_path = storage_path('/app/public/excel/'. $date . '/');
+
+        $file_name = $date . $random . '角色资源信息';
+
+
+        Excel::create($file_name, function($excel) use ($cellData){
             $excel->sheet('resource', function($sheet) use ($cellData){
                 $sheet->rows($cellData);
             });
-        })->download('xls');
+        })->store('xls', $excel_path);
 
-        //return response(Response::Success($list));
+        $url = env('APP_URL') . '/storage/excel/' . $date . '/' . $file_name . 'xls';
+
+        return response(Response::Success($url));
 	}
 
 	/**

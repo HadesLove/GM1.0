@@ -402,6 +402,7 @@ class DataController extends Controller
 
         $orm = DB::connection($this->database[$server_id]['chat'])
             ->table('lg_resource')
+            ->orderBy('time', 'DESC')
             ->select('id', 'server_id', 'role_id', 'action_id', 'action_desc', 'item_id', 'init_value', 'add_value', 'result_value', 'channel', 'role_name', 'user_code', 'time');
 
         if ($role_id) {
@@ -430,6 +431,74 @@ class DataController extends Controller
             $value->item_name   = $good[$value->item_id]['good_name'];
             $value->time        = date('Y-m-d H:i:s', $value->time);
         }
+
+        return response(Response::Success($list));
+	}
+
+	public function resourceExcel(Request $request)
+	{
+	    $role_id   = $request->input('role_id');
+	    $server_id = $request->input('server_id');
+	    $goods_id  = $request->input('goods_id');
+	    $details   = $request->input('details');
+	    $time      = $request->input('time');
+
+        $orm = DB::connection($this->database[$server_id]['chat'])
+            ->table('lg_resource')
+            ->orderBy('time', 'DESC')
+            ->select('id', 'server_id', 'role_id', 'action_id', 'action_desc', 'item_id', 'init_value', 'add_value', 'result_value', 'channel', 'role_name', 'user_code', 'time');
+
+        if ($role_id) {
+            $orm->where(['role_id' => $role_id]);
+        }
+
+        if ($goods_id) {
+            $orm->where(['item_id' => $goods_id]);
+        }
+
+        if ($details) {
+            $orm->where('action_desc', 'like', '%' . $details . '%');
+        }
+
+        if ($time[0] && $time[1]) {
+            $orm->whereBetween('time', array(strtotime($time[0]), strtotime($time[1])));
+        }
+
+        $list = $orm->paginate(20);
+
+        $server = Server::all()->keyBy('id')->toArray();
+        $good   = Good::all()->keyBy('id')->toArray();
+
+        foreach ($list as $key=>$value) {
+            $value->server_name = $server[$value->server_id]['server_name'];
+            $value->item_name   = $good[$value->item_id]['good_name'];
+            $value->time        = date('Y-m-d H:i:s', $value->time);
+        }
+
+        $cellData = [
+            ['id', '区服', '角色id', '角色名', '物品', '动作描述', '初始值', '变化值', '最终值', '时间'],
+        ];
+
+        foreach ($list as $key=>$value) {
+            $cellData[] = array(
+                $value->id,
+                $value->server_name,
+                $value->role_id,
+                $value->role_name,
+                $value->item_name,
+                $value->action_desc,
+                $value->init_value,
+                $value->add_value,
+                $value->result_value,
+                $value->time,
+            );
+        }
+
+        Excel::create('角色资源信息',function($excel) use ($cellData){
+            $excel->sheet('resource', function($sheet) use ($cellData){
+                $sheet->rows($cellData);
+            });
+        })->export('xls');
 
         return response(Response::Success($list));
 	}

@@ -158,7 +158,7 @@ class DataController extends Controller
 
         $date = date('Y-m-d', time());
 
-        $excel_path = storage_path('/excel/'. $date . '/');
+        $excel_path = storage_path('/app/public/excel/'. $date . '/');
 
         $file_name = $date . $random . '角色信息';
 
@@ -515,7 +515,7 @@ class DataController extends Controller
 
         $date = date('Y-m-d', time());
 
-        $excel_path = storage_path('/excel/'. $date . '/');
+        $excel_path = storage_path('/app/public/excel/'. $date . '/');
 
         $file_name = $date . $random . '角色资源信息';
 

@@ -205,7 +205,7 @@ return [
 
         'gdjj' => [
             'driver' => 'mysql',
-            'host' => '134.175.142.205',
+            'host' => '139.199.85.54',
             'port' => '3306',
             'database' => 'jh_s20008',
             'username' => 'root',
@@ -233,7 +233,7 @@ return [
 
         'lbwb' => [
             'driver' => 'mysql',
-            'host' => '134.175.142.205',
+            'host' => '139.199.85.54',
             'port' => '3306',
             'database' => 'jh_s20009',
             'username' => 'root',
@@ -261,7 +261,7 @@ return [
 
         'sptj' => [
             'driver' => 'mysql',
-            'host' => '134.175.142.205',
+            'host' => '139.199.85.54',
             'port' => '3306',
             'database' => 'jh_s20010',
             'username' => 'root',
@@ -289,7 +289,7 @@ return [
 
         'cjsz' => [
             'driver' => 'mysql',
-            'host' => '134.175.142.205',
+            'host' => '139.199.85.54',
             'port' => '3306',
             'database' => 'jh_s20011',
             'username' => 'root',
@@ -317,7 +317,7 @@ return [
 
         'xxdf' => [
             'driver' => 'mysql',
-            'host' => '134.175.142.205',
+            'host' => '139.199.85.54',
             'port' => '3306',
             'database' => 'jh_s20012',
             'username' => 'root',

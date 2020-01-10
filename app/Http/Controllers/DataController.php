@@ -526,7 +526,7 @@ class DataController extends Controller
             });
         })->store('xls', $excel_path);
 
-        $url = env('APP_URL') . '/storage/excel/' . $date . '/' . $file_name . 'xls';
+        $url = env('APP_URL') . '/storage/excel/' . $date . '/' . $file_name . '.xls';
 
         return response(Response::Success($url));
 	}

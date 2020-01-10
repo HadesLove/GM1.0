@@ -158,7 +158,7 @@ class DataController extends Controller
             $excel->sheet('role', function($sheet) use ($cellData){
                 $sheet->rows($cellData);
             });
-        })->export('xls');
+        })->download('xls');
 
         //return response(Response::Success($list));
 	}
@@ -498,9 +498,9 @@ class DataController extends Controller
             $excel->sheet('resource', function($sheet) use ($cellData){
                 $sheet->rows($cellData);
             });
-        })->export('xls');
+        })->download('xls');
 
-        return response(Response::Success($list));
+        //return response(Response::Success($list));
 	}
 
 	/**

@@ -95,6 +95,7 @@ Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
     Route::any('child/list', 'DataController@childList');
     Route::any('role/stream/list', 'DataController@roleStreamList');
     Route::any('resource/list', 'DataController@resourceList');
+    Route::any('resource/excel', 'DataController@resourceExcel');
     Route::any('chat/list', 'DataController@chatList');
     Route::any('real/time/chat', 'DataController@RealTimeChat');
     Route::any('order/list', 'DataController@OrderList');

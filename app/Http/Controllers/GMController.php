@@ -100,8 +100,6 @@ class GMController extends Controller
         $channel   = $request->input('channel', null);
         $level     = $request->input('level', null);
 
-        $serverId = intval($server);
-
         $item = array();
         if ($item_id) {
             foreach ($item_id as $item_key => $item_value) {
@@ -170,32 +168,36 @@ class GMController extends Controller
             "items"       => json_encode($item),
         );
 
-        $time = time();
-        $sign_args = json_encode($url_args);
-        $sign = md5("args={$sign_args}&fun=web_op_sys_mail&mod=mail_api&sid={$serverId}&time={$time}&key={$this->key}");
+        if (is_array($server)) {
+            foreach ($server as $value) {
+                $time = time();
+                $sign_args = json_encode($url_args);
+                $sign = md5("args={$sign_args}&fun=web_op_sys_mail&mod=mail_api&sid={$value}&time={$time}&key={$this->key}");
 
-        //组装内容
-        $info = array(
-            'args'      => $sign_args,
-            'fun'       => 'web_op_sys_mail',
-            'mod'       => 'mail_api',
-            'sid'       => $serverId,
-            'time'      => $time,
-            'sign'      => $sign,
-        );
+                //组装内容
+                $info = array(
+                    'args'      => $sign_args,
+                    'fun'       => 'web_op_sys_mail',
+                    'mod'       => 'mail_api',
+                    'sid'       => $value,
+                    'time'      => $time,
+                    'sign'      => $sign,
+                );
 
-        //发送内容
-        $res = $this->send_post(env('WXURL'), $info);
+                //发送内容
+                $res = $this->send_post(env('WXURL'), $info);
 
-        $result = Gmmail::create([
-            'role_list'  => $role_list,
-            'server_id'  => $serverId,
-            'channel_id' => $channel,
-            'account_id' => UID,
-            'title'      => $title,
-            'content'    => $content,
-            'attach_s'   => json_encode($item),
-        ]);
+                $result = Gmmail::create([
+                    'role_list'  => $role_list,
+                    'server_id'  => $value,
+                    'channel_id' => $channel,
+                    'account_id' => UID,
+                    'title'      => $title,
+                    'content'    => $content,
+                    'attach_s'   => json_encode($item),
+                ]);
+            }
+        }
 
         $res = json_decode($res, true);
 

@@ -28,6 +28,8 @@ Route::post('time/tack1', 'GameController@timeTack');
 
 Route::group(['middleware' => 'AuthToken', 'prefix' => 'auth'], function (){
 
+    Route::any('kicking/off', 'GMController@kickingOff');
+
     Route::post('manager/add', 'ManagerController@store');
     Route::patch('manager/{id}', 'ManagerController@update');
     Route::any('manager/list', 'ManagerController@managerList');
